@@ -1,0 +1,2 @@
+install/sbt package
+/usr/local/spark/bin/spark-submit --class "DataPreprocess" ./target/scala-2.11/data-preprocess_2.11-1.0.jar "file:///home/qiozou/src/spark-video-bp/spark-video/data/" "file:///home/qiozou/src/spark-video-bp/spark-video/output2/" --executor-memory 1g --driver-memory 3g --executor-cores 1 --num-executors 3 --conf spark.network.timeout 10000000 --conf spark.executor.heartbeatInterval=10000000

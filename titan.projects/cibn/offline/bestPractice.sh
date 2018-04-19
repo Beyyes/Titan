@@ -1,0 +1,1 @@
+/usr/local/spark/bin/spark-submit --class org.apache.spark.examples.SparkPi --master yarn --deploy-mode cluster --driver-memory 1g --executor-memory 40g --executor-cores 7 --num-executors 4 /usr/local/spark/examples/jars/spark-examples_2.11-2.3.0.jar
