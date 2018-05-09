@@ -79,8 +79,10 @@ if __name__ == '__main__':
     deployment = Deployment()
     if args.action == 'deploy':
         deployment.deploy()
-    if args.action == 'clear':
+    elif args.action == 'reset':
         deployment.reset_cluster()
+    else:
+        print("Error parameter for ACTION")
 
 
 
