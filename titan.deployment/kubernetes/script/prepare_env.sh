@@ -14,7 +14,11 @@ else
 fi
 
 swapoff --all
-apt-get update && apt-get install -y apt-transport-https curl
+if curl --help > /dev/null 2>&1; then
+    printInfo "curl has been installed"
+else
+    apt-get update && apt-get install -y apt-transport-https curl
+fi
 
 ## add apt source for kubernetes
 

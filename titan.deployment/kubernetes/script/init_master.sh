@@ -4,6 +4,8 @@ printInfo(){
     echo "[info] $1"
 }
 
+username="dladmin"
+
 ./prepare_env.sh
 
 # initialize master for kubernetes
@@ -11,9 +13,12 @@ printInfo "init kubernetes master..."
 kubeadm init
 
 # set config file of kubectl for dladmin
-mkdir -p /home/dladmin/.kube
-cp -i /etc/kubernetes/admin.conf /home/dladmin/.kube/config
-sudo chown dladmin:dladmin /home/dladmin/.kube/config
+if [ -d "/home/$username/.kube" ]; then
+    rm -rf "/home/$username/.kube"
+fi
+mkdir -p "/home/$username/.kube"
+cp -i /etc/kubernetes/admin.conf "/home/$username/.kube/config"
+sudo chown "$username:$username" "/home/$username/.kube/config"
 
 # set config file for root
 export KUBECONFIG=/etc/kubernetes/admin.conf
