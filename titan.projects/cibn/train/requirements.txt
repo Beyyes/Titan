@@ -1,0 +1,6 @@
+pyyaml==3.12
+backports-abc==0.5
+numpy==1.14.0
+sklearn==0.0
+tensorflow==1.4.1
+scipy==1.0.0

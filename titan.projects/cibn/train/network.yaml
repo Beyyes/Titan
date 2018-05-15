@@ -1,0 +1,47 @@
+#data
+#data format:ffm
+data:
+     train_file  : /model/data/train_data.ffm
+     eval_file  :  /model/data/train_data_val.ffm
+     test_file  :  /model/data/train_data_test.ffm
+     infer_file  :  /model/data/train_data_test.ffm
+     field_count : 2 
+     feature_count : 142773
+     data_format : ffm
+     infer_file_has_label: True
+
+#model
+#model_type:deepFM or deepWide or dnn or ipnn or opnn or fm or lr
+model:
+    method : classification
+    model_type : deepWide 
+    dim : 10
+    layer_sizes : [400, 400, 400, 400]
+    activation : [relu, relu, relu, relu]
+    dropout : [0.0, 0.0, 0.0, 0.0]
+    model_dir: /model/checkpoint
+#    load_model_name : ./checkpoint/epoch_1
+
+
+#train
+#init_method: normal,tnormal,uniform,he_normal,he_uniform,xavier_normal,xavier_uniform
+train:
+    init_method: tnormal
+    init_value : 0.1
+    embed_l2 : 0.0001
+    embed_l1 : 0.0
+    layer_l2 : 0.0001
+    layer_l1 : 0.0
+    learning_rate : 0.001
+    loss : log_loss
+    optimizer : adam
+    epochs : 30
+    batch_size : 4096
+    auto_stop_auc: True
+
+#show info
+#metric :'auc','logloss', 'group_auc'
+info:
+    show_step : 1
+    save_epoch : 1
+    metrics : [auc, logloss]
