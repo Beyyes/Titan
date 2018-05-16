@@ -71,10 +71,6 @@ docker_repo = 'deeplearningrepo'
 docker_username = 'deeplearningrepo'
 docker_password = 'asdlkj!12345'
 
-#docker_repo = 'neilbao'
-#docker_username = 'neilbao'
-#docker_password = 'dockerhub1986'
-
 log = logging.getLogger(__name__)
 
 args = {'owner': 'airflow', 
