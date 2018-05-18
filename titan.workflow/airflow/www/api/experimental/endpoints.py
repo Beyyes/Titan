@@ -26,6 +26,7 @@ from airflow.api.common.experimental import pool as pool_api
 from airflow.api.common.experimental import trigger_dag as trigger
 from airflow.api.common.experimental.get_task import get_task
 from airflow.api.common.experimental.get_task_instance import get_task_instance
+from airflow.api.common.experimental.get_dag_run_state import get_dag_run_state
 from airflow.exceptions import AirflowException
 from airflow.utils import timezone
 from airflow.utils.log.logging_mixin import LoggingMixin
@@ -85,8 +86,26 @@ def trigger_dag(dag_id):
     if getattr(g, 'user', None):
         _log.info("User {} created {}".format(g.user, dr))
 
-    response = jsonify(message="Created {}".format(dr))
+    response = jsonify({"dag_id": dag_id, "run_id": str(dr.run_id), "execution_date": str(dr.execution_date.isoformat())})
     return response
+
+
+@csrf.exempt
+@api_experimental.route('/dags/<string:dag_id>/dag_runs/<string:execution_date>', methods=['GET'])
+@requires_authentication
+def dag_run_state(dag_id, execution_date):
+    """
+    Get dag run state by dag_id and execution_date.
+    """
+    try:
+        execution_date = timezone.parse(execution_date)
+        state = get_dag_run_state(dag_id, execution_date)
+    except AirflowException as e:
+        _log.error(e)
+        response = jsonify(error="{}".format(e))
+        response.status_code = getattr(e, 'status', 500)
+        return response
+    return jsonify(state)
 
 
 @csrf.exempt

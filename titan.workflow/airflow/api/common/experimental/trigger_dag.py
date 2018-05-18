@@ -53,8 +53,8 @@ def trigger_dag(dag_id, run_id=None, conf=None, execution_date=None,
         ))
 
     run_conf = None
-    if conf:
-        run_conf = json.loads(conf)
+    if type(conf) == dict:
+        run_conf = conf.copy()
 
     trigger = dag.create_dagrun(
         run_id=run_id,
