@@ -28,6 +28,7 @@ from airflow.api.common.experimental.get_task import get_task
 from airflow.api.common.experimental.get_task_instance import get_task_instance
 from airflow.api.common.experimental.get_dag_run_state import get_dag_run_state
 from airflow.api.common.experimental.get_task_xcom import get_task_xcom
+from airflow.api.common.experimental.clear_dag import clear_dag
 from airflow.exceptions import AirflowException
 from airflow.utils import timezone
 from airflow.utils.log.logging_mixin import LoggingMixin
@@ -118,6 +119,42 @@ def dag_run_state(dag_id, execution_date):
         response.status_code = getattr(e, 'status', 500)
         return response
     return jsonify(state)
+
+
+@csrf.exempt
+@api_experimental.route('/dags/<string:dag_id>/dag_runs/<string:execution_date>/clear', methods=['PUT'])
+@requires_authentication
+def dag_run_clear(dag_id, execution_date):
+    """
+    Clear dag run state by dag_id and execution_date.
+    """
+
+    only_failed = request.args.get('only_failed', type=str, default="false")
+    only_running = request.args.get('only_running', type=str, default="false")
+
+    only_failed = only_failed.lower() == "true"
+    only_running = only_running.lower() == "true"
+
+    try:
+        execution_date = timezone.parse(execution_date)
+    except ValueError:
+        error_message = (
+        'Given execution date, {}, could not be identified '
+        'as a date. Example date format: 2015-11-16T14:34:15+00:00'.format(
+            execution_date))
+        _log.info(error_message)
+        response = jsonify({'error': error_message})
+        response.status_code = 400
+        return response
+
+    try:
+        count = clear_dag(dag_id, execution_date, only_failed=only_failed, only_running=only_running)
+    except AirflowException as e:
+        _log.error(e)
+        response = jsonify(error="{}".format(e))
+        response.status_code = getattr(e, 'status', 500)
+        return response
+    return jsonify({"count": count})
 
 
 @csrf.exempt
