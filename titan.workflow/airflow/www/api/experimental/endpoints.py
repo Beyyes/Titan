@@ -27,6 +27,7 @@ from airflow.api.common.experimental import trigger_dag as trigger
 from airflow.api.common.experimental.get_task import get_task
 from airflow.api.common.experimental.get_task_instance import get_task_instance
 from airflow.api.common.experimental.get_dag_run_state import get_dag_run_state
+from airflow.api.common.experimental.get_task_xcom import get_task_xcom
 from airflow.exceptions import AirflowException
 from airflow.utils import timezone
 from airflow.utils.log.logging_mixin import LoggingMixin
@@ -86,12 +87,12 @@ def trigger_dag(dag_id):
     if getattr(g, 'user', None):
         _log.info("User {} created {}".format(g.user, dr))
 
-    response = jsonify({"dag_id": dag_id, "run_id": str(dr.run_id), "execution_date": str(dr.execution_date.isoformat())})
+    response = jsonify({"dag_id": dag_id, "execution_date": str(dr.execution_date.isoformat())})
     return response
 
 
 @csrf.exempt
-@api_experimental.route('/dags/<string:dag_id>/dag_runs/<string:execution_date>', methods=['GET'])
+@api_experimental.route('/dags/<string:dag_id>/dag_runs/<string:execution_date>/state', methods=['GET'])
 @requires_authentication
 def dag_run_state(dag_id, execution_date):
     """
@@ -99,6 +100,17 @@ def dag_run_state(dag_id, execution_date):
     """
     try:
         execution_date = timezone.parse(execution_date)
+    except ValueError:
+        error_message = (
+        'Given execution date, {}, could not be identified '
+        'as a date. Example date format: 2015-11-16T14:34:15+00:00'.format(
+            execution_date))
+        _log.info(error_message)
+        response = jsonify({'error': error_message})
+        response.status_code = 400
+        return response
+
+    try:
         state = get_dag_run_state(dag_id, execution_date)
     except AirflowException as e:
         _log.error(e)
@@ -106,6 +118,46 @@ def dag_run_state(dag_id, execution_date):
         response.status_code = getattr(e, 'status', 500)
         return response
     return jsonify(state)
+
+
+@csrf.exempt
+@api_experimental.route('/xcom', methods=['GET'])
+@requires_authentication
+def xcom():
+    """
+    Get dag xcom by dag_id task_id and execution_date.
+    """
+    dag_id = request.args.get('dag_id')
+    task_id = request.args.get('task_id')
+    execution_date = request.args.get('execution_date')
+
+    try:
+        if dag_id == None or execution_date == None:
+	        raise AirflowException('dag_id and execution_date are required')
+        
+        try:
+            execution_date = timezone.parse(execution_date)
+        except ValueError:
+            error_message = (
+            'Given execution date, {}, could not be identified '
+            'as a date. Example date format: 2015-11-16T14:34:15+00:00'.format(
+                execution_date))
+            _log.info(error_message)
+            response = jsonify({'error': error_message})
+            response.status_code = 400
+
+            return response
+
+	xcom_results = get_task_xcom(dag_id=dag_id, task_id=task_id, execution_date=execution_date)
+        attr_list = []
+        for r in xcom_results:
+	    attr_list.append((r.task_id, r.key, r.value))
+    except AirflowException as e:
+        _log.error(e)
+        response = jsonify(error="{}".format(e))
+        response.status_code = getattr(e, 'status', 500)
+        return response
+    return jsonify(attr_list)
 
 
 @csrf.exempt

@@ -4449,6 +4449,62 @@ class XCom(Base, LoggingMixin):
 
     @classmethod
     @provide_session
+    def get(
+            cls,
+            execution_date,
+            key=None,
+            task_id=None,
+            dag_id=None,
+            include_prior_dates=False,
+            enable_pickling=None,
+            session=None):
+        """
+        Retrieve an XCom value, optionally meeting certain criteria.
+        TODO: "pickling" has been deprecated and JSON is preferred. "pickling" will be removed in Airflow 2.0.
+
+        :param enable_pickling: If pickling is not enabled, the XCOM value will be parsed to JSON instead.
+        :return: XCom value
+        """
+        filters = []
+        if key:
+            filters.append(cls.key == key)
+        if task_id:
+            filters.append(cls.task_id == task_id)
+        if dag_id:
+            filters.append(cls.dag_id == dag_id)
+        if include_prior_dates:
+            filters.append(cls.execution_date <= execution_date)
+        else:
+            filters.append(cls.execution_date == execution_date)
+
+        query = (
+            session.query(cls)
+                .filter(and_(*filters)))
+
+        results = query.all()
+        if enable_pickling is None:
+            enable_pickling = configuration.conf.getboolean(
+                'core', 'enable_xcom_pickling'
+            )
+         
+        for result in results:
+            if enable_pickling:
+                result.value = pickle.loads(result.value)
+            else:
+                try:
+                    result.value = json.loads(result.value.decode('UTF-8'))
+                except ValueError:
+                    log = LoggingMixin().log
+                    log.error("Could not serialize the XCOM value into JSON. "
+                              "If you are using pickles instead of JSON "
+                              "for XCOM, then you need to enable pickle "
+                              "support for XCOM in your airflow config.")
+                    raise
+        return results
+
+
+    @classmethod
+    @provide_session
     def get_one(
                 cls,
                 execution_date,
