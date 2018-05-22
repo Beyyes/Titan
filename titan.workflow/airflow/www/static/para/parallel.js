@@ -392,7 +392,7 @@ function set_color_scaler(field) {
     ext = d3.extent(selected, function(d){return d[color_column]});
     med = d3.median(selected, function(d){return d[color_column]});
     arr = [ext[0], med, ext[1]];
-    color_scaler = d3.scale.linear().range(['#FF5A5F', 'grey', '#007A87']).domain(arr);
+    color_scaler = d3.scale.linear().range(['#9e480e', 'grey', '#4472c4']).domain(arr);
 }
 
 function color(d, a){

@@ -28,7 +28,12 @@
 {% endblock %}
 
 {% block body %}
-  <h2>Ad Hoc Query</h2>
+  <h2>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="../">Home</a></li>
+        <li class="breadcrumb-item">Ad Hoc Query</li>
+    </ol>
+  </h2>
   <form method="post" id="query_form">
     <div class="form-inline">
         <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">

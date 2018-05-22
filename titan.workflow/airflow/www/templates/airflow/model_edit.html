@@ -20,8 +20,13 @@
 {% block body %}
   {% if admin_view.verbose_name %}
   <h2>
-    {{ admin_view.verbose_name|title }}
-    <small>[edit]</small>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../../">Home</a></li>
+      <li class="breadcrumb-item">
+        {{ admin_view.verbose_name_plural|title }}
+        <small>[edit]</small>
+      </li>
+    </ol>
   </h2>
   <hr/>
   {% endif %}

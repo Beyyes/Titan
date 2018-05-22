@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block body %}
-  <h2>DAGs</h2>
+  <h2 color="#6d89cb;">DAGs</h2>
 
   <div id="main_content" style="display:none;">
     <div class="row">
@@ -145,7 +145,7 @@
                 </a>
 
                 <!-- Tree -->
-                <a href="{{ url_for('airflow.tree', dag_id=dag.dag_id, num_runs=num_runs) }}">
+                <a href="{{ url_for('airflow.tree', dag_id=dag.dag_id, num_runs=25) }}">
                     <span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true" data-original-title="Tree View"></span>
                 </a>
 
