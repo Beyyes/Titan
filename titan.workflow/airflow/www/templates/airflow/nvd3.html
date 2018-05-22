@@ -70,10 +70,15 @@ body {
 {% else %}
   <div id="container">
     <h2>
-        <span id="label">{{ label }}</span>
-        <a href="{{ url_for('chart.edit_view') }}?id={{ chart.id }}" >
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="../">Home</a></li>
+        <li class="breadcrumb-item">
+          <span id="label">{{ label }}</span>
+          <a href="{{ url_for('chart.edit_view') }}?id={{ chart.id }}" >
             <span class="glyphicon glyphicon-edit" aria-hidden="true" ></span>
-        </a>
+          </a>
+        </li>
+      </ol>
     </h2>
     <div id="error" style="display: none;" class="alert alert-danger" role="alert">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -152,8 +157,8 @@ body {
     }
     $( document ).ready(function() {
       colors: [
-          "#FF5A5F", "#007A87", "#7B0051", "#00D1C1", "#8CE071", "#FFB400",
-          "#FFAA91", "#B4A76C", "#9CA299", "#565A5C"
+          "#9e480e", "#4472c4", "#ffc000", "#5b9bd5", "#70ad47", "#ffc000",
+          "#ed7d31", "#997300", "#a5a5a5", "#787878"
       ];
       url = "{{ url_for('airflow.chart_data') }}" + location.search;
       $.getJSON(url, function(payload) {

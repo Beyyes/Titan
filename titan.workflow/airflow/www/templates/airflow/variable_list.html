@@ -19,7 +19,12 @@
 
 {% block model_menu_bar %}
   {% if admin_view.verbose_name_plural %}
-    <h2>{{ admin_view.verbose_name_plural|title }}</h2>
+    <h2>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="../">Home</a></li>
+        <li class="breadcrumb-item">{{ admin_view.verbose_name_plural|title }}</li>
+      </ol>
+    </h2>
   {% endif %}
   <form class="form-inline" action="{{ url_for("airflow.varimport") }}" method=post enctype=multipart/form-data style="margin-top: 50px;">
     {% if csrf_token %}

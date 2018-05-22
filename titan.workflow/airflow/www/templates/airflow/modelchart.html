@@ -24,7 +24,12 @@
     <script src="/ck/static/chartkick.js"></script>
     <div class="container">
         {% if show_chart %}
-            <h2>{{ label }}</h2>
+            <h2>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="../">Home</a></li>
+                    <li class="breadcrumb-item">{{ label }}</li>
+                </ol>
+            </h2>
             {% if chart.chart_type == "area_chart" %}
                 {% area_chart data with height=height library=chart_options%}
             {% elif chart.chart_type == "line_chart" %}

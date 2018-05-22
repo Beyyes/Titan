@@ -29,21 +29,30 @@
 {% block body %}
   <div>
     <h3 class="pull-left">
-      {% if dag.parent_dag %}
-        <span style='color:#AAA;'>SUBDAG: </span> <span> {{ dag.dag_id }}</span>
-      {% else %}
-        <input id="pause_resume" dag_id="{{ dag.dag_id }}" type="checkbox" {{ "checked" if not dag.is_paused else "" }} data-toggle="toggle" data-size="mini" method="post">
-        <span style='color:#AAA;'>DAG: </span> <span> {{ dag.dag_id }}</span> <small class="text-muted"> {{ dag.description }} </small>
-      {% endif %}
-      {% if root %}
-        <span style='color:#AAA;'>ROOT: </span> <span> {{ root }}</span>
-      {% endif %}
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="../">Home</a></li>
+          <li class="breadcrumb-item">
+            {% if dag.parent_dag %}
+              <span style='color:#6d89cb;'>SUBDAG: </span> <span> {{ dag.dag_id }}</span>
+            {% else %}
+              <span style='color:#6d89cb;'>DAG: </span> <span> {{ dag.dag_id }}</span> <small class="text-muted"> {{ dag.description }} </small>
+              <input id="pause_resume" dag_id="{{ dag.dag_id }}" type="checkbox" {{ "checked" if not dag.is_paused else "" }} data-toggle="toggle" data-size="mini" method="post">
+            {% endif %}
+            {% if root %}
+              <span style='color:#6d89cb;'>ROOT: </span> <span> {{ root }}</span>
+            {% endif %}
+        </li>
+      </ol>
     </h3>
-    <h4 class="pull-right">
-      <a class="label label-default" href="/admin/dagrun/?flt2_dag_id_equals={{ dag.dag_id }}">
-        schedule: {{ dag.schedule_interval }}
-      </a>
-    </h4>
+    <h3 class="pull-right">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+        <a class="label label-default" href="/admin/dagrun/?flt2_dag_id_equals={{ dag.dag_id }}">
+          schedule: {{ dag.schedule_interval }}
+        </a>
+        </li>
+      </ol>
+    </h3>
   </div>
   <div class="clearfix"></div>
   <div>
@@ -57,7 +66,7 @@
       <li><a href="{{ url_for("airflow.graph", dag_id=dag.dag_id, root=root, execution_date=execution_date) }}">
           <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
         Graph View</a></li>
-      <li><a href="{{ url_for("airflow.tree", dag_id=dag.dag_id, num_runs=num_runs, root=root) }}">
+      <li><a href="{{ url_for("airflow.tree", dag_id=dag.dag_id, num_runs=25, root=root) }}">
           <span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true"></span>
         Tree View
       </a></li>

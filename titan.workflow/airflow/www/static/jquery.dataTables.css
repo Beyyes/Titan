@@ -140,7 +140,7 @@ table.dataTable.display tbody tr.odd > .sorting_1, table.dataTable.order-column.
   background-color: #f1f1f1;
 }
 table.dataTable.display tbody tr.odd > .sorting_2, table.dataTable.order-column.stripe tbody tr.odd > .sorting_2 {
-  background-color: #f3f3f3;
+  background-color: #c0c9e4;
 }
 table.dataTable.display tbody tr.odd > .sorting_3, table.dataTable.order-column.stripe tbody tr.odd > .sorting_3 {
   background-color: whitesmoke;
