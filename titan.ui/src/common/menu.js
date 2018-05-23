@@ -16,7 +16,6 @@ const menuData = [
         name: '模型服务监控',
         path: 'grafana',
         children: [
-
           {
             name: '首页',
             path: 'home',
@@ -40,6 +39,10 @@ const menuData = [
           {
             name: '数据源管理',
             path: 'datasources',
+          },
+          {
+            name: 'Metrics监控',
+            path: 'metrics',
           },
         ],
       },
@@ -70,7 +73,7 @@ const menuData = [
       },
     ],
   },
-      /*
+  /*
   {
     name: '异常页',
     icon: 'warning',
