@@ -76,7 +76,9 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/Dashboard/Airflow')),
     },
     '/dashboard/grafana/dashboard-manager': {
-      component: dynamicWrapper(app, [], () => import('../routes/Dashboard/GrafanaDashboardManager')),
+      component: dynamicWrapper(app, [], () =>
+        import('../routes/Dashboard/GrafanaDashboardManager')
+      ),
     },
     '/dashboard/grafana/home': {
       component: dynamicWrapper(app, [], () => import('../routes/Dashboard/Grafana')),
@@ -85,16 +87,25 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/Dashboard/GrafanaDashboardNew')),
     },
     '/dashboard/grafana/dashboard-new-folder': {
-      component: dynamicWrapper(app, [], () => import('../routes/Dashboard/GrafanaDashboardNewFolder')),
+      component: dynamicWrapper(app, [], () =>
+        import('../routes/Dashboard/GrafanaDashboardNewFolder')
+      ),
     },
     '/dashboard/grafana/dashboard-import': {
-      component: dynamicWrapper(app, [], () => import('../routes/Dashboard/GrafanaDashboardImport')),
+      component: dynamicWrapper(app, [], () =>
+        import('../routes/Dashboard/GrafanaDashboardImport')
+      ),
     },
     '/dashboard/grafana/alerts': {
       component: dynamicWrapper(app, [], () => import('../routes/Dashboard/GrafanaAlert')),
     },
     '/dashboard/grafana/datasources': {
       component: dynamicWrapper(app, [], () => import('../routes/Dashboard/GrafanaDataSource')),
+    },
+    '/dashboard/grafana/metrics': {
+      component: dynamicWrapper(app, [], () =>
+        import('../routes/Dashboard/GrafanaDashboardMetrics')
+      ),
     },
     '/dashboard/kubernetes': {
       component: dynamicWrapper(app, [], () => import('../routes/Dashboard/Kubernetes')),
