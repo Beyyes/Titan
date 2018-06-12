@@ -1,0 +1,7 @@
+#!/bin/bash
+
+{% for host in machinelist %}
+    {% if 'yarnrole' in machinelist[ host ] and machinelist[ host ][ 'yarnrole' ] == 'master' -%}
+kubectl label nodes {{ machinelist[ host ][ 'nodenamelb' ] }} graphiterole=master
+    {% endif %}
+{% endfor %}

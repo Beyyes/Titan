@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-historyserver-web
+  labels:
+    app: spark-historyserver-web
+spec:
+  type: NodePort
+  ports:
+  - port: 18080
+    nodePort: 30880
+    name: webui
+  selector:
+    app: spark-base
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spark-base
+  labels:
+    app: spark-base
+spec:
+  ports:
+  - port: 18080
+    name: history-server
+  clusterIP: None
+  selector:
+    app: spark-base
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: spark-base
+spec:
+  serviceName: "spark-base"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: spark-base
+    spec:
+      # Use hostNetwork so datanodes connect to namenode without going through an overlay network
+      # like weave. Otherwise, namenode fails to see physical IP address of datanodes.
+      hostNetwork: true
+      hostPID: true
+      containers:
+        - name: spark-base
+          image: shraonraining/spark-base:latest
+          args: ["/spark-historyserver.sh"]
+          env:
+            - name: CORE_CONF_fs_defaultFS
+              value: hdfs://{{ clusterinfo[ 'hadoopinfo' ][ 'hadoop_master_hostname' ] }}:9000
+            - name: YARN_CONF_yarn_resourcemanager_hostname
+              value: {{ clusterinfo[ 'hadoopinfo' ][ 'hadoop_master_hostname' ] }}
+            - name: SPARK_CONF_spark_eventLog_enabled
+              value: "true"
+            - name: spark_eventLog_dir
+              value: /spark_history_server/history
+            - name: SPARK_CONF_spark_eventLog_dir
+              value: hdfs://{{ clusterinfo[ 'hadoopinfo' ][ 'hadoop_master_hostname' ] }}:9000/spark_history_server/history
+            - name: SPARK_CONF_spark_yarn_historyServer_address
+              value: http://{{ clusterinfo[ 'hadoopinfo' ][ 'hadoop_master_hostname' ] }}:18080
+            - name: GRAPHITE_CONF_HOST
+              value: {{ clusterinfo[ 'hadoopinfo' ][ 'hadoop_master_hostname' ] }}
+            - name: GRAPHITE_CONF_PORT
+              value: "2003"
+          ports:
+          - containerPort: 18080
+            name: history-server
+      nodeSelector:
+        sparkrole: master
+      restartPolicy: Always
