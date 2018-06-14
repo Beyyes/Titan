@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import _ from 'underscore';
-import { Table, Icon, Button } from 'antd';
+import { Table, Icon, Button, InputNumber } from 'antd';
 
 function fetchData() {
   let res = null;
@@ -61,15 +61,21 @@ export default class MetricsMonitorPage extends Component {
 
   handleClick = (e, appId) => {
     e.preventDefault();
-    const url = `http://localhost:3333/dashboard/script/spark.js?app=${appId}&maxExecutorId=1&orgId=1&from=now-6h&to=now`;
+    this.url = `http://localhost:3333/dashboard/script/spark.js?app=${appId}&maxExecutorId=2&orgId=1&from=now-6h&to=now`;
     if (this.setState) {
-      this.setState({ isHome: false, url });
+      this.setState({ isHome: false, url: this.url });
     }
   };
 
   handleGoBack = e => {
     e.preventDefault();
     this.setState({ isHome: true });
+  };
+
+  onChange = (value) => {
+    const replacer = (match, p1, p2, p3) => `${p1}${value}${p3}`;
+    this.url = this.url.replace(/^(.*maxExecutorId=)(\d*)(&.*)$/, replacer);
+    this.setState({ isHome: false, url: this.url });
   };
 
   render() {
@@ -80,6 +86,10 @@ export default class MetricsMonitorPage extends Component {
         <Button type="primary" onClick={this.handleGoBack}>
           <Icon type="left" />Backward
         </Button>
+        <div>
+          <label>ExecutorNumber: </label>
+          <InputNumber min={1} max={100} defaultValue={2} onChange={this.onChange} />
+        </div>
         <iframe
           title="metrics-monitor"
           src={this.state.url}

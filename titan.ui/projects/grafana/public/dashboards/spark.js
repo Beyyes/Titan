@@ -230,7 +230,7 @@ var driverTemplateVar = {
     // brackets for some reason.
     { text: 'driver', value: 'driver' },
   ],
-  current: { text: '<driver>', value: '<driver>' },
+  current: { text: 'driver', value: 'driver' },
 };
 
 var executorRangeTemplateVar = {
@@ -299,7 +299,7 @@ var executorRangeWidth = 1;
 while (10 * executorRangeWidth < maxExecutorId) {
   executorRangeWidth *= 10;
 }
-while (executorRangeWidth > 0) {
+while (executorRangeWidth >= 1) {
   var numRanges = Math.ceil(maxExecutorId / executorRangeWidth);
   if (numRanges > 100) break;
   for (var range = 0; range < numRanges; range++) {
@@ -384,6 +384,7 @@ function panel(title, targets, opts, showLegend) {
     targets: targets.map(function(target) {
       return { target: target };
     }),
+    datasource: 'graphite',
   });
 }
 
@@ -405,14 +406,14 @@ function executorJvmPanel(id, opts) {
 function multiExecutorPanel(title, target, opts, percentiles, fns) {
   var targets = [];
   function makeFullTarget(range) {
-    var fullTarget = summarize(prefix(target, range));
+    var fullTarget = prefix(target, range);
     (fns || []).forEach(function(fn) {
       fullTarget = fn(fullTarget);
     });
     return fullTarget;
   }
 
-  targets.push(aliasByExecutorId(makeFullTarget()));
+  targets.push(makeFullTarget());
   (percentiles || []).forEach(function(percentile) {
     if (percentile == 'total') {
       targets.push(alias(sumSeries(makeFullTarget('*')), 'total'));
@@ -503,7 +504,7 @@ var threadpool_row = {
     ),
     panel(
       'Completed tasks per minute per executor',
-      [aliasByExecutorId(nonNegativeDerivative(summarize(prefix('threadpool.completeTasks'), '1m', 'max')))],
+      [summarize(prefix('threadpool.completeTasks'), '1m', 'max')],
       { pointradius: 1 }
     ),
   ],
@@ -533,12 +534,56 @@ var driver_row = {
       }
     ),
     executorJvmPanel('$driver'),
-    panel('Driver GC Time/s', [alias(perSecond(summarize('$prefix.$driver.jvm.PS-Scavenge.time')), 'GC time')], {
+    panel('Driver GC Time/s', [alias(perSecond('$prefix.$driver.jvm.PS-Scavenge.time'), 'GC time')], {
       nullPointMode: 'connected',
       pointradius: 1,
     }),
   ],
 };
+
+
+// A "row" with driver-stages.
+var dagScheduler_row = {
+  title: 'DAGScheduler',
+  height: '250px',
+  editable: true,
+  collapse: false,
+  panels: [
+    panel(
+      'DAG stage',
+      [
+        alias('$prefix.$driver.DAGScheduler.stage.runningStages', 'running stages'),
+        alias('$prefix.$driver.DAGScheduler.stage.waitingStages', 'waiting stages'),
+      ],
+      {
+        nullPointMode: 'connected',
+        seriesOverrides: [
+          {
+            alias: 'waiting stages',
+            yaxis: 2,
+          },
+        ],
+      }
+    ),
+    panel(
+      'DAG processing time',
+      [
+        alias('$prefix.$driver.DAGScheduler.messageProcessingTime.p75', 'processing time p75'),
+        alias('$prefix.$driver.DAGScheduler.messageProcessingTime.p95', 'processing time p95'),
+      ],
+      {
+        nullPointMode: 'connected',
+        seriesOverrides: [
+          {
+            alias: 'processing time p95',
+            yaxis: 2,
+          },
+        ],
+      }
+    ),
+  ],
+};
+
 
 // A "row" with HDFS I/O stats.
 var hdfs_row = {
@@ -548,7 +593,7 @@ var hdfs_row = {
   collapse: false,
   panels: [
     multiExecutorPanel(
-      'HDFS reads/s, 10s avgs',
+      'HDFS reads/s/executor',
       'filesystem.hdfs.read_ops',
       {
         span: 6,
@@ -589,7 +634,7 @@ var hdfs_row = {
       percentilesAndTotals ? [25, 50, 75, 'total'] : []
     ),
     multiExecutorPanel(
-      'HDFS bytes read/s/executor, 10s avgs',
+      'HDFS bytes read/s/executor',
       'filesystem.hdfs.read_bytes',
       {
         y_formats: ['bytes', 'bytes'],
@@ -610,13 +655,54 @@ var hdfs_row = {
       [perSecond]
     ),
     multiExecutorPanel(
-      'HDFS bytes read',
+      'HDFS bytes read/executor',
       'filesystem.hdfs.read_bytes',
       {
         y_formats: ['bytes', 'bytes'],
         span: 6,
       },
       percentilesAndTotals ? [5, 50, 95, 'total'] : []
+    ),
+  ],
+};
+
+var executor_performance_row = {
+  title: 'Executor performance',
+  height: '300px',
+  editable: true,
+  collapse: false,
+  panels: [
+    multiExecutorPanel(
+      'derialization time',
+      'deserializeTime.count',
+    ),
+    multiExecutorPanel(
+      'result serialization time',
+      'resultSerializationTime.count',
+    ),
+    panel(
+      'shuffle blocks fetched',
+      [
+        alias('$prefix.$executorRange.executor.shuffleRemoteBlocksFetched.count', 'shuffle remote blocks fetched'),
+        alias('$prefix.$executorRange.executor.shuffleLocalBlocksFetched.count', 'shuffle local blocks fetched'),
+      ],
+      {
+        nullPointMode: 'connected',
+        seriesOverrides: [
+          {
+            alias: 'shuffle local blocks fetched',
+            yaxis: 2,
+          },
+        ],
+      }
+    ),
+    multiExecutorPanel(
+      'shuffle total bytes read',
+      'shuffleTotalBytesRead.count',
+    ),
+    multiExecutorPanel(
+      'shuffle write time',
+      'shuffleWriteTime.count',
     ),
   ],
 };
@@ -681,7 +767,7 @@ var carbon_row = {
 };
 
 // The dashboard, with its rows.
-dashboard.rows = [executor_row, threadpool_row, driver_row, hdfs_row, carbon_row];
+dashboard.rows = [driver_row, executor_row, threadpool_row, dagScheduler_row, executor_performance_row, hdfs_row, carbon_row];
 
 console.log('Returning: %O', dashboard);
 
