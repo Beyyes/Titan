@@ -276,31 +276,39 @@ class TitanHelper:
         return train_output_dir
 
     @staticmethod
-    def get_yarn_logs(job):
-        logs = []
+    def get_task_roles(job):
         if type(job) == dict:
-            log = job.get('containerLog')
-            if log != None: return log.encode('ascii')
+            roles = job.get('taskRoles')
+            if roles:
+                return roles 
+        return None
 
-            for it in job.items():
-                log = TitanHelper.get_yarn_logs(it[1])
-                if log != None:
-                    if type(log) == str:
-                        logs.append(log)
-                    else:
-                        logs.extend(log)
+    @staticmethod
+    def _get_yarn_logs(job, logs):
+        if type(job) == dict:
+            clog = job.get('containerLog')
+            if clog != None:
+                logs.append(clog)
+            else:
+                for it in job.items():
+                    TitanHelper._get_yarn_logs(it[1], logs)
         elif type(job) == list:
             for it in job:
-                log = TitanHelper.get_yarn_logs(it)
-                if log != None:
-                    if type(log) == str:
-                        logs.append(log)
-                    else:
-                        logs.extend(log)
-        else:
-            return None
-        return logs
+                TitanHelper._get_yarn_logs(it, logs)
 
+    @staticmethod
+    def get_yarn_logs(job):
+        logs = {} 
+        roles = TitanHelper.get_task_roles(job)
+        if roles:
+            for it in roles.items():
+                tmp_logs = []
+                TitanHelper._get_yarn_logs(it[1], tmp_logs) 
+                if tmp_logs:
+                    logs[it[0]] = tmp_logs
+            if logs:
+                return logs
+        return None
 
     @staticmethod
     def poll_job(job_name, poll_logs=False, interval_sec = 60):
@@ -311,6 +319,8 @@ class TitanHelper:
             if poll_logs:
                 yarn_logs = TitanHelper.get_yarn_logs(job)
                 if yarn_logs:
+                    #log.info('yarn job: %s' % job)
+                    log.info('yarn logs: %s', yarn_logs)
                     return yarn_logs
             if status == "succeeded":
                 log.info("job %s succeeded" % job_name)
@@ -506,6 +516,9 @@ class TitanTrainOperator(BaseOperator):
             raise AirflowException("`train_code_dir` or `train_cmd` is None")
 
         train_job_guid = TitanHelper.append_uuid(train_job_name)
+
+        if '%s' in train_cmd:
+            train_cmd = train_cmd.replace('%s', '{train_output_dir}')
 
         if '{train_output_dir}' in train_cmd:
             train_output_dir = TitanHelper.get_train_output_dir(self.titan_username, train_job_guid)
@@ -798,14 +811,14 @@ seldon_deploy_abtest_template="""{
                          {
                              "image": "{{model_image}}",
                              "imagePullPolicy": "Always",
-                             "name": "{{model_name}}",
+                             "name": "{{model_name}}-a",
                              "resources": { "requests": { "memory": "{{model_memory}}Mi" } }
                          },
 
                          {
                              "image": "{{model_image_b}}",
                              "imagePullPolicy": "Always",
-                             "name": "{{model_name_b}}",
+                             "name": "{{model_name_b}}-b",
                              "resources": { "requests": { "memory": "{{model_memory_b}}Mi" } }
                          }
                      ],
@@ -823,8 +836,8 @@ seldon_deploy_abtest_template="""{
                      "parameters": [ { "name":"ratioA", "value":"{{ratio_a}}", "type":"FLOAT" } ],
                      "children":
                      [
-                         { "name": "{{model_name}}", "endpoint":{ "type":"REST" }, "type":"MODEL", "children":[] },
-                         { "name": "{{model_name_b}}", "endpoint":{ "type":"REST" }, "type":"MODEL", "children":[] }
+                         { "name": "{{model_name}}-a", "endpoint":{ "type":"REST" }, "type":"MODEL", "children":[] },
+                         { "name": "{{model_name_b}}-b", "endpoint":{ "type":"REST" }, "type":"MODEL", "children":[] }
                      ]
                  }
              }
