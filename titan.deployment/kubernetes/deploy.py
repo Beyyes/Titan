@@ -15,7 +15,7 @@ class Deployment:
         self.join_cmd = ""
 
     def pack_script(self):
-        tar_cmd = "tar -cvf init_ script.tar script";
+        tar_cmd = "tar -cvf init_ script.tar script"
         subprocess.check_call(tar_cmd, shell=True)
 
     def transferScripts(self, host):
