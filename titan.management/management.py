@@ -18,6 +18,15 @@ class Management:
         output = commands.getstatusoutput(cmd)
         print(output)
 
+    # maybe we also need a k8s service/deployment cleaning script
+    def k8s_dashboard_deploy(self):
+        cmd = "cd dashboard && kubectl create -f dashboard-rbac.yaml && " \
+              "kubectl create -f dashboard-controller.yaml && " \
+              "kubectl create -f dashboard-service.yaml"
+        output = commands.getstatusoutput(cmd)
+        print(output)
+
+    # a parameter of port is needed, 8000 port many be conflict with others
     def ui_deploy(self):
         cmd = "cd ../titan.ui/ && " \
               "npm install && " \
@@ -45,13 +54,6 @@ class Management:
         output = commands.getstatusoutput(cmd)
         print(output)
 
-    def k8s_dashboard_deploy(self):
-        cmd = "cd dashboard && kubectl create -f dashboard-rbac.yaml && " \
-              "kubectl create -f dashboard-controller.yaml && " \
-              "kubectl create -f dashboard-service.yaml"
-        output = commands.getstatusoutput(cmd)
-        print(output)
-
     def all_deploy(self):
         print('all-deploy')
         self.k8s_deploy()
@@ -70,6 +72,8 @@ if __name__ == '__main__':
         management.k8s_deploy()
     elif args.action == 'k8s-reset':
         management.k8s_reset()
+    elif args.action == 'k8s-dashboard':
+        management.k8s_dashboard_deploy()
     elif args.action == 'ui':
         management.ui_deploy()
     elif args.action == 'all':
