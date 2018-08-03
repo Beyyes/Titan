@@ -20,7 +20,7 @@ class Management:
 
     def ui_deploy(self):
         cmd = "cd ../titan.ui/ && " \
-              "npm install" \
+              "npm install && " \
               "npm start"
         output = commands.getstatusoutput(cmd)
         print(output)
