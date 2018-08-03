@@ -20,6 +20,7 @@ class Management:
 
     def ui_deploy(self):
         cmd = "cd ../titan.ui/ && " \
+              "npm install" \
               "npm start"
         output = commands.getstatusoutput(cmd)
         print(output)
@@ -61,7 +62,7 @@ class Management:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--deploy', required=True, default=None, help="action to execute. select one from 'k8s', 'ui', 'airflow' and 'all'")
+    parser.add_argument('-a', '--action', required=True, default=None, help="action to execute. select one from 'k8s', 'ui', 'airflow' and 'all'")
     args = parser.parse_args()
 
     management = Management()
