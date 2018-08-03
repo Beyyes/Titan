@@ -20,7 +20,7 @@ class Management:
 
     # maybe we also need a k8s service/deployment cleaning script
     def k8s_dashboard_deploy(self):
-        cmd = "cd dashboard && kubectl create -f dashboard-rbac.yaml && " \
+        cmd = "cd config/dashboard && kubectl create -f dashboard-rbac.yaml && " \
               "kubectl create -f dashboard-controller.yaml && " \
               "kubectl create -f dashboard-service.yaml"
         output = commands.getstatusoutput(cmd)
@@ -41,14 +41,14 @@ class Management:
         print(output)
 
     def airflow_deploy(self):
-        cmd = "cd airflow && sh node-label.sh && " \
+        cmd = "cd config/airflow && sh node-label.sh && " \
               "kubectl create -f airflow-deployment.yaml && " \
               "kubectl create -f airflow-service.yaml"
         output = commands.getstatusoutput(cmd)
         print(output)
 
     def grafana_deploy(self):
-        cmd = "cd grafana && sh node-label.sh && " \
+        cmd = "cd config/grafana && sh node-label.sh && " \
               "kubectl create -f grafana-deployment.yaml && " \
               "kubectl create -f grafana-service.yaml"
         output = commands.getstatusoutput(cmd)
