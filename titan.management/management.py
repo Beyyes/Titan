@@ -20,13 +20,14 @@ class Management:
 
     # maybe we also need a k8s service/deployment cleaning script
     def k8s_dashboard_deploy(self):
-        cmd = "cd config/dashboard && kubectl create -f dashboard-rbac.yaml && " \
+        cmd = "cd config/dashboard && " \
+              "kubectl create -f dashboard-rbac.yaml && " \
               "kubectl create -f dashboard-controller.yaml && " \
               "kubectl create -f dashboard-service.yaml"
         output = commands.getstatusoutput(cmd)
         print(output)
 
-    # a parameter of port is needed, 8000 port many be conflict with others
+    # a parameter of port is needed, port 8000 may be conflict with others
     def ui_deploy(self):
         cmd = "cd ../titan.ui/ && " \
               "npm install && " \
@@ -41,14 +42,16 @@ class Management:
         print(output)
 
     def airflow_deploy(self):
-        cmd = "cd config/airflow && sh node-label.sh && " \
+        cmd = "cd config/airflow && " \
+              "sh node-label.sh && " \
               "kubectl create -f airflow-deployment.yaml && " \
               "kubectl create -f airflow-service.yaml"
         output = commands.getstatusoutput(cmd)
         print(output)
 
     def grafana_deploy(self):
-        cmd = "cd config/grafana && sh node-label.sh && " \
+        cmd = "cd config/grafana && " \
+              "sh node-label.sh && " \
               "kubectl create -f grafana-deployment.yaml && " \
               "kubectl create -f grafana-service.yaml"
         output = commands.getstatusoutput(cmd)
@@ -74,6 +77,10 @@ if __name__ == '__main__':
         management.k8s_reset()
     elif args.action == 'k8s-dashboard':
         management.k8s_dashboard_deploy()
+    elif args.action == 'airflow':
+        management.airflow_deploy()
+    elif args.action == 'grafana':
+        management.grafana_deploy()
     elif args.action == 'ui':
         management.ui_deploy()
     elif args.action == 'all':

@@ -14,7 +14,7 @@
     "precommit": "npm run lint-staged",
     "prettier": "prettier --write ./src/**/**/**/*",
     "site": "roadhog-api-doc static && gh-pages -d dist",
-    "start": "cross-env ESLINT=none roadhog dev",
+    "start": "set port=8008 && cross-env ESLINT=none roadhog dev",
     "start:no-proxy": "cross-env NO_PROXY=true ESLINT=none roadhog dev",
     "test": "roadhog test",
     "test:all": "node ./tests/run-tests.js",
