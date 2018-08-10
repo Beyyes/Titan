@@ -1,5 +1,7 @@
 FROM ubuntu:16.04
 
+ENV AIRFLOW_HOME=/airflow
+
 RUN apt-get -y update && \
     apt-get -y install \
       nano \
@@ -25,12 +27,11 @@ RUN apt-get -y update && \
       mysql-server \
       libmysqlclient-dev \
       mysql-client && \
-      mkdir -p /airflow &&
+      mkdir -p /airflow &&\
       pip install mysqlclient \
       airflow[mysql,crypto,password]
 
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-ENV AIRFLOW_HOME=/airflow
 
 COPY ./airflow-setup.sh /airflow-setup.sh
 CMD ['airflow-setup.sh']
