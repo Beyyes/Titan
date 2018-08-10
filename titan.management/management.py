@@ -49,6 +49,15 @@ class Management:
         output = commands.getstatusoutput(cmd)
         print(output)
 
+    # single node shell, not k8s deployment
+    def airflow_deploy_shell(self, airflow_home):
+        cmd = "export AIRFLOW_HOME=" + airflow_home + \
+              "apt-get install mysql-server mysql-client && " \
+              "kubectl create -f airflow-deployment.yaml && " \
+              "kubectl create -f airflow-service.yaml"
+        output = commands.getstatusoutput(cmd)
+        print(output)
+
     def grafana_deploy(self):
         cmd = "cd config/grafana && " \
               "sh node-label.sh && " \
@@ -56,6 +65,14 @@ class Management:
               "kubectl create -f grafana-service.yaml"
         output = commands.getstatusoutput(cmd)
         print(output)
+
+    def pai_deploy(self):
+        # a cluster-configuration is needed
+        cmd = "./deploy.py -d -p /cluster-configuration/ -s"
+
+    def mysql_deploy(self):
+        # a cluster-configuration is needed
+        cmd = "./deploy.py -d -p /cluster-configuration/ -s"
 
     def all_deploy(self):
         print('all-deploy')
