@@ -9,9 +9,6 @@ RUN apt-get -y update && \
       joe \
       wget \
       curl \
-      jq \
-      gawk \
-      psmisc \
       python \
       python-yaml \
       python-jinja2 \
@@ -23,13 +20,9 @@ RUN apt-get -y update && \
       openjdk-8-jdk \
       openssh-server \
       openssh-client \
-      git \
-      mysql-server \
-      libmysqlclient-dev \
-      mysql-client && \
-      mkdir -p /airflow &&\
-      pip install mysqlclient \
-      airflow[mysql,crypto,password]
+      git \&&
+      mkdir -p /airflow
+
 
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
