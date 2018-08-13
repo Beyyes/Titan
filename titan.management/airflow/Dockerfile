@@ -23,6 +23,7 @@ RUN apt-get -y update && \
       git \&&
       mkdir -p /airflow
 
+# chmod +x airflow-setup.sh
 
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 

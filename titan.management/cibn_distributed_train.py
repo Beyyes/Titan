@@ -24,13 +24,15 @@ import os
 project_name = os.path.splitext(os.path.basename(__file__))[0]
 
 # HDFS Parameter
-hdfs_host = '10.190.190.185'
+hdfs_host = '10.190.148.73'
 hdfs_port = '9000'
 
 # Offline Job Parameter
 jar_hdfs_path = '/cibn/jar/'
 jar_local_path = '/home/dladmin/cibn/offline'
-spark_offline_cmd = 'HADOOP_USER_NAME=qiozou /usr/local/spark/bin/spark-submit --class "DataPreprocess" --master yarn --deploy-mode cluster {} {} {} --driver-memory 3g --executor-memory 3g --executor-cores 4 --num-executors 4'
+spark_offline_cmd = 'HADOOP_USER_NAME=qiozou /usr/local/spark/bin/spark-submit --class "DataPreprocess" ' \
+                    '--master yarn --deploy-mode cluster {} {} {} ' \
+                    '--driver-memory 3g --executor-memory 3g --executor-cores 4 --num-executors 4'
 offline_input = 'hdfs://' + hdfs_host + ':' + hdfs_port + '/offline/input/' + project_name + '/Large/'
 offline_output = 'hdfs://' + hdfs_host + ':' + hdfs_port + '/offline/output/' + project_name + '/Large/'
 offline_dir = '/offline/output/' + project_name + '/Large/'
