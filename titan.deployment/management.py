@@ -6,6 +6,22 @@ class Management:
     def __init__(self):
         print('init')
 
+    def kubeadm_install(self):
+        # deploy k8s cluster
+        cmd = "cd ../titan.deployment/kubernetes/ && " \
+              "sudo ./deploy.py -a deploy"
+        output = commands.getstatusoutput(cmd)
+        for a,b in output:
+            print(a + "-------" + b)
+
+        # deploy k8s dashboard
+        cmd = "cd config/dashboard && " \
+              "kubectl create -f dashboard-rbac.yaml && " \
+              "kubectl create -f dashboard-controller.yaml && " \
+              "kubectl create -f dashboard-service.yaml"
+        output = commands.getstatusoutput(cmd)
+        print(output)
+
     def k8s_deploy(self):
         # deploy k8s cluster
         cmd = "cd ../titan.deployment/kubernetes/ && " \
