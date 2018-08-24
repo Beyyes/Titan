@@ -87,10 +87,14 @@ class Management:
 
     def airflow_deploy(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "cd config/airflow && " \
-              "sh node-label.sh && " \
-              "kubectl create -f airflow-deployment.yaml && " \
-              "kubectl create -f airflow-service.yaml"
+        cmd = "cd airflow && "
+        output = commands.getoutput(cmd)
+        path = os.getcwd()
+        cmd = "export AIRFLOW_HOME=" + path\
+              + "sudo apt-get install mysql-server mysql-client && " \
+                "sudo apt-get install libmysqlclient-dev && " \
+                "sudo pip install mysqlclient && " \
+                "pip install airflow[mysql,crypto,password]"
         output = commands.getoutput(cmd)
         print(output)
 
@@ -102,7 +106,7 @@ class Management:
               "npm start"
         output = commands.getoutput(cmd)
         print(output)
-    
+
     # def airflow_deploy(self):
     #     print(">>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
     #     cmd = "cd config/airflow && " \
