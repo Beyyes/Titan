@@ -1,6 +1,6 @@
-
 import argparse
 import commands
+import yaml
 
 class Management:
     def __init__(self):
@@ -8,16 +8,9 @@ class Management:
 	return
 
     def kubeadm_install(self):
-        # deploy k8s cluster
+        # install kubeadm
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo ./deploy.py -a deploy"
-        output = commands.getoutput(cmd)
-
-        # deploy k8s dashboard
-        cmd = "cd config/dashboard && " \
-              "kubectl create -f dashboard-rbac.yaml && " \
-              "kubectl create -f dashboard-controller.yaml && " \
-              "kubectl create -f dashboard-service.yaml"
         output = commands.getoutput(cmd)
         print(output)
 
@@ -54,23 +47,38 @@ class Management:
               "kubectl create -f dashboard-service.yaml"
         output = commands.getoutput(cmd)
         print(output)
-	print ("You can access k8s dashboard by port 30280\r\n")
+        print ("You can access k8s dashboard by port 30280\r\n")
 
-    # a parameter of port is needed, port 8000 may be conflict with others
-    def ui_deploy(self):
-        print(">>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "cd ../titan.ui/ && " \
-              "npm install && " \
-              "npm start"
-        output = commands.getoutput(cmd)
-        print(output)
+    def pai_deploy(self):
+        print(">>>>>>>>>>>>>>>>>>>>>>> deploy PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<")
+        # with open("config/cluster-config.yaml", "r") as k8s_cluster_file:
+        #     yaml_obj = yaml.load(k8s_cluster_file.read())
+        #
+        #     host_list = yaml_obj["host-list"]
+        #     host_list[0]['username'] = 'xxxxx'
+        #     print(host_list)
+        #
+        #
+        # # write to yaml
+        # with open("config/service-config/cluster-configuration-tmp.yaml", "w") as pai_cluster_file:
+        #     # yaml_obj = yaml.load(pai_cluster_file.read())
+        #     # pai_cluster_file["machine-list"] = 0
+        #     yaml.dump(yaml_obj, pai_cluster_file)
 
-    def seldon_deploy(self):
-        print(">>>>>>>>>>>>>>>>>>>>>>> deploy seldon <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "cd ../titan.deployment/seldon/script && " \
-              "sudo ./install_seldon.sh"
-        output = commands.getoutput(cmd)
-        print(output)
+        # a cluster-configuration is needed
+        cmd = "git clone https://github.com/Beyyes/pai && " \
+              "cd pai/pai-management && " \
+              "git checkout deploy_for_titan_prod && " \
+              "sudo python deploy.py -d -p config/service-config"
+
+    def pai_clear(self):
+        print(">>>>>>>>>>>>>>>>>>>>>>> clean PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<")
+
+        # a cluster-configuration is needed
+        cmd = "git clone https://github.com/Beyyes/pai && " \
+              "cd pai/pai-management && " \
+              "git checkout deploy_for_titan_prod && " \
+              "sudo python cleanup-service.py"
 
     def airflow_deploy(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
@@ -81,12 +89,32 @@ class Management:
         output = commands.getoutput(cmd)
         print(output)
 
+    # a parameter of port is needed, port 8000 may be conflict with others
+    def ui_deploy(self):
+        print(">>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
+        cmd = "cd ../titan.ui/ && " \
+              "npm install && " \
+              "npm start"
+        output = commands.getoutput(cmd)
+        print(output)
+    
+    def mysql_deploy(self):
+        # a cluster-configuration is needed
+        cmd = "./deploy.py -d -p /cluster-configuration/ -s"
+
     # single node shell, not k8s deployment
     def airflow_deploy_shell(self, airflow_home):
         cmd = "export AIRFLOW_HOME=" + airflow_home + \
               "apt-get install mysql-server mysql-client && " \
               "kubectl create -f airflow-deployment.yaml && " \
               "kubectl create -f airflow-service.yaml"
+        output = commands.getoutput(cmd)
+        print(output)
+
+    def seldon_deploy(self):
+        print(">>>>>>>>>>>>>>>>>>>>>>> deploy seldon <<<<<<<<<<<<<<<<<<<<<<<")
+        cmd = "cd ../titan.deployment/seldon/script && " \
+              "sudo ./install_seldon.sh"
         output = commands.getoutput(cmd)
         print(output)
 
@@ -97,14 +125,6 @@ class Management:
               "kubectl create -f grafana-service.yaml"
         output = commands.getoutput(cmd)
         print(output)
-
-    def pai_deploy(self):
-        # a cluster-configuration is needed
-        cmd = "./deploy.py -d -p /cluster-configuration/ -s"
-
-    def mysql_deploy(self):
-        # a cluster-configuration is needed
-        cmd = "./deploy.py -d -p /cluster-configuration/ -s"
 
     def all_deploy(self):
         print('all-deploy')
@@ -126,6 +146,10 @@ if __name__ == '__main__':
         management.k8s_reset()
     elif args.action == 'k8s-dashboard':
         management.k8s_dashboard_deploy()
+    elif args.action == 'pai-deploy':
+        management.pai_deploy()
+    elif args.action == 'pai-clear':
+        management.pai_clear()
     elif args.action == 'airflow':
         management.airflow_deploy()
     elif args.action == 'grafana':
