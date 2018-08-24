@@ -41,6 +41,10 @@ class Management:
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo python deploy.py -a reset"
         output = commands.getstatusoutput(cmd)
+        for a,b in output:
+            print(a + "-------" + b)
+        for a in output:
+            print(a + "====")
         print(output)
 
     # maybe we also need a k8s service/deployment cleaning script
