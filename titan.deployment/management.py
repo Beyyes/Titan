@@ -4,7 +4,7 @@ import commands
 
 class Management:
     def __init__(self):
-        print('init\r\n')
+        print('init')
 
     def k8s_deploy(self):
         # deploy k8s cluster
@@ -23,7 +23,7 @@ class Management:
 
     def k8s_reset(self):
         cmd = "cd ../titan.deployment/kubernetes/ && " \
-              "sudo ./deploy.py -a reset"
+              "sudo python deploy.py -a reset"
         output = commands.getstatusoutput(cmd)
         print(output)
 
