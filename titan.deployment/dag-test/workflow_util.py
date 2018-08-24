@@ -18,8 +18,8 @@ titan_env = os.environ.get('TITAN_ENV', 'dev')
 
 if titan_env == "dev":
     platform_hdfs_uri = "hdfs://10.190.148.73:9000/"
-    platform_job_rest_api_path = "http://10.190.148.73:9186/api/v1/jobs"
-    platform_token_rest_api_path = "http://10.190.148.73:9186/api/v1/token"
+    platform_job_rest_api_path = "http://10.190.148.73:30186/api/v1/jobs"
+    platform_token_rest_api_path = "http://10.190.148.73:30186/api/v1/token"
     platform_tensorflow_runtime_image = "neilbao/pai.run.tensorflow"
 elif titan_env == "prod":
     platform_hdfs_uri = "hdfs://10.190.190.185:9000/"

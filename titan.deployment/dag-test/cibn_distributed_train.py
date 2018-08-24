@@ -45,8 +45,8 @@ model_name = 'CibnPredictor'
 model_memory = 200
 
 # Rest Server Job Submit Parameter
-portal_user_name = "admin"
-portal_user_password = "password"
+portal_user_name = "adminadmin"
+portal_user_password = "adminadmin"
 
 # Yarn train job parameter
 train_code_dir = 'hdfs://' + hdfs_host + ':' + hdfs_port + '/path/code/cibn/code'

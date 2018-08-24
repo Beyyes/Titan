@@ -4,11 +4,20 @@ import commands
 
 class Management:
     def __init__(self):
-        print('a')
+        print('init\r\n')
 
     def k8s_deploy(self):
+        # deploy k8s cluster
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo ./deploy.py -a deploy"
+        output = commands.getstatusoutput(cmd)
+        print(output)
+
+        # deploy k8s dashboard
+        cmd = "cd config/dashboard && " \
+              "kubectl create -f dashboard-rbac.yaml && " \
+              "kubectl create -f dashboard-controller.yaml && " \
+              "kubectl create -f dashboard-service.yaml"
         output = commands.getstatusoutput(cmd)
         print(output)
 

@@ -27,5 +27,5 @@ RUN apt-get -y update && \
 
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
-COPY ./airflow-setup.sh /airflow-setup.sh
+COPY airflow-setup.sh /airflow-setup.sh
 CMD ['airflow-setup.sh']
