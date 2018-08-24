@@ -70,6 +70,8 @@ class Management:
               "cd pai/pai-management && " \
               "git checkout deploy_for_titan_prod && " \
               "sudo python deploy.py -d -p config/service-config"
+        output = commands.getoutput(cmd)
+        print(output)
 
     def pai_clear(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> clean PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<")
@@ -79,6 +81,8 @@ class Management:
               "cd pai/pai-management && " \
               "git checkout deploy_for_titan_prod && " \
               "sudo python cleanup-service.py"
+        output = commands.getoutput(cmd)
+        print(output)
 
     def airflow_deploy(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
@@ -97,7 +101,7 @@ class Management:
               "npm start"
         output = commands.getoutput(cmd)
         print(output)
-    
+
     def mysql_deploy(self):
         # a cluster-configuration is needed
         cmd = "./deploy.py -d -p /cluster-configuration/ -s"
