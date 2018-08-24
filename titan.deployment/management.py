@@ -69,7 +69,7 @@ class Management:
         cmd = "git clone https://github.com/Beyyes/pai && " \
               "cd pai/pai-management && " \
               "git checkout deploy_for_titan_prod && " \
-              "sudo python deploy.py -d -p config/service-config"
+              "sudo python deploy.py -d -p ../../config/service-config"
         output = commands.getoutput(cmd)
         print(output)
 
@@ -77,8 +77,7 @@ class Management:
         print(">>>>>>>>>>>>>>>>>>>>>>> clean PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<")
 
         # a cluster-configuration is needed
-        cmd = "git clone https://github.com/Beyyes/pai && " \
-              "cd pai/pai-management && " \
+        cmd = "cd pai/pai-management && " \
               "git checkout deploy_for_titan_prod && " \
               "sudo python cleanup-service.py"
         output = commands.getoutput(cmd)
