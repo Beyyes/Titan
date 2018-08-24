@@ -66,13 +66,12 @@ class Management:
         #     # pai_cluster_file["machine-list"] = 0
         #     yaml.dump(yaml_obj, pai_cluster_file)
 
-        abspath = os.getcwd()
+        configpath = os.getcwd() + "/config/service-config"
         # a cluster-configuration is needed
         cmd = "git clone https://github.com/Beyyes/pai && " \
               "cd pai/pai-management && " \
               "git checkout deploy_for_titan_prod && " \
-              "cd ../.. &&" \
-              "sudo python pai/pai-management/deploy.py -d -p " + abspath + "/config/service-config"
+              "sudo python deploy.py -d -p " + configpath
         output = commands.getoutput(cmd)
         print(output)
 
