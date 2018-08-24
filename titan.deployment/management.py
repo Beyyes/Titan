@@ -4,15 +4,14 @@ import commands
 
 class Management:
     def __init__(self):
-        print('init')
+        #print('init')
+	return
 
     def kubeadm_install(self):
         # deploy k8s cluster
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo ./deploy.py -a deploy"
         output = commands.getoutput(cmd)
-        for a,b in output:
-            print(a + "-------" + b)
 
         # deploy k8s dashboard
         cmd = "cd config/dashboard && " \
@@ -26,13 +25,13 @@ class Management:
         # deploy k8s cluster
         print(">>>>>>>>>>>>>>>>>>>>>>> deploy k8s cluster using kubeadm <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ../titan.deployment/kubernetes/ && " \
-              "sudo ./deploy.py -a deploy"
+              "sudo python deploy.py -a deploy"
         output = commands.getoutput(cmd)
         print(output)
 
         # deploy k8s dashboard
-        print(">>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "cd config/dashboard && " \
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<")
+        cmd = "cd kubernetes/dashboard && " \
               "kubectl create -f dashboard-rbac.yaml && " \
               "kubectl create -f dashboard-controller.yaml && " \
               "kubectl create -f dashboard-service.yaml"
@@ -44,21 +43,18 @@ class Management:
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo python deploy.py -a reset"
         output = commands.getoutput(cmd)
-        for a,b in output:
-            print(a + "-------" + b)
-        for a in output:
-            print(a + "====")
         print(output)
 
     # maybe we also need a k8s service/deployment cleaning script
     def k8s_dashboard_deploy(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "cd config/dashboard && " \
+        cmd = "cd kubernetes/dashboard && " \
               "kubectl create -f dashboard-rbac.yaml && " \
               "kubectl create -f dashboard-controller.yaml && " \
               "kubectl create -f dashboard-service.yaml"
         output = commands.getoutput(cmd)
         print(output)
+	print ("You can access k8s dashboard by port 30280\r\n")
 
     # a parameter of port is needed, port 8000 may be conflict with others
     def ui_deploy(self):
