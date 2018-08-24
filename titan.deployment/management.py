@@ -102,10 +102,19 @@ class Management:
               "npm start"
         output = commands.getoutput(cmd)
         print(output)
-
-    def mysql_deploy(self):
-        # a cluster-configuration is needed
-        cmd = "./deploy.py -d -p /cluster-configuration/ -s"
+    
+    # def airflow_deploy(self):
+    #     print(">>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
+    #     cmd = "cd config/airflow && " \
+    #           "sh node-label.sh && " \
+    #           "kubectl create -f airflow-deployment.yaml && " \
+    #           "kubectl create -f airflow-service.yaml"
+    #     output = commands.getoutput(cmd)
+    #     print(output)
+    #
+    # def mysql_deploy(self):
+    #     # a cluster-configuration is needed
+    #     cmd = "./deploy.py -d -p /cluster-configuration/ -s"
 
     # single node shell, not k8s deployment
     def airflow_deploy_shell(self, airflow_home):
