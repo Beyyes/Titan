@@ -10,7 +10,7 @@ class Management:
         # deploy k8s cluster
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo ./deploy.py -a deploy"
-        output = commands.getstatusoutput(cmd)
+        output = commands.getoutput(cmd)
         for a,b in output:
             print(a + "-------" + b)
 
@@ -19,28 +19,31 @@ class Management:
               "kubectl create -f dashboard-rbac.yaml && " \
               "kubectl create -f dashboard-controller.yaml && " \
               "kubectl create -f dashboard-service.yaml"
-        output = commands.getstatusoutput(cmd)
+        output = commands.getoutput(cmd)
         print(output)
 
     def k8s_deploy(self):
         # deploy k8s cluster
+        print(">>>>>>>>>>>>>>>>>>>>>>> deploy k8s cluster using kubeadm <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo ./deploy.py -a deploy"
-        output = commands.getstatusoutput(cmd)
+        output = commands.getoutput(cmd)
         print(output)
 
         # deploy k8s dashboard
+        print(">>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd config/dashboard && " \
               "kubectl create -f dashboard-rbac.yaml && " \
               "kubectl create -f dashboard-controller.yaml && " \
               "kubectl create -f dashboard-service.yaml"
-        output = commands.getstatusoutput(cmd)
+        output = commands.getoutput(cmd)
         print(output)
 
     def k8s_reset(self):
+        print(">>>>>>>>>>>>>>>>>>>>>>> reset k8s cluster <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo python deploy.py -a reset"
-        output = commands.getstatusoutput(cmd)
+        output = commands.getoutput(cmd)
         for a,b in output:
             print(a + "-------" + b)
         for a in output:
@@ -49,33 +52,37 @@ class Management:
 
     # maybe we also need a k8s service/deployment cleaning script
     def k8s_dashboard_deploy(self):
+        print(">>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd config/dashboard && " \
               "kubectl create -f dashboard-rbac.yaml && " \
               "kubectl create -f dashboard-controller.yaml && " \
               "kubectl create -f dashboard-service.yaml"
-        output = commands.getstatusoutput(cmd)
+        output = commands.getoutput(cmd)
         print(output)
 
     # a parameter of port is needed, port 8000 may be conflict with others
     def ui_deploy(self):
+        print(">>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ../titan.ui/ && " \
               "npm install && " \
               "npm start"
-        output = commands.getstatusoutput(cmd)
+        output = commands.getoutput(cmd)
         print(output)
 
     def seldon_deploy(self):
+        print(">>>>>>>>>>>>>>>>>>>>>>> deploy seldon <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ../titan.deployment/seldon/script && " \
               "sudo ./install_seldon.sh"
-        output = commands.getstatusoutput(cmd)
+        output = commands.getoutput(cmd)
         print(output)
 
     def airflow_deploy(self):
+        print(">>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd config/airflow && " \
               "sh node-label.sh && " \
               "kubectl create -f airflow-deployment.yaml && " \
               "kubectl create -f airflow-service.yaml"
-        output = commands.getstatusoutput(cmd)
+        output = commands.getoutput(cmd)
         print(output)
 
     # single node shell, not k8s deployment
@@ -84,7 +91,7 @@ class Management:
               "apt-get install mysql-server mysql-client && " \
               "kubectl create -f airflow-deployment.yaml && " \
               "kubectl create -f airflow-service.yaml"
-        output = commands.getstatusoutput(cmd)
+        output = commands.getoutput(cmd)
         print(output)
 
     def grafana_deploy(self):
@@ -92,7 +99,7 @@ class Management:
               "sh node-label.sh && " \
               "kubectl create -f grafana-deployment.yaml && " \
               "kubectl create -f grafana-service.yaml"
-        output = commands.getstatusoutput(cmd)
+        output = commands.getoutput(cmd)
         print(output)
 
     def pai_deploy(self):
