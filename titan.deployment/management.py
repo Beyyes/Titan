@@ -99,11 +99,11 @@ class Management:
         output = commands.getoutput(cmd)
         print(output)
 
-        print(">>>>>> Installing mysql-server, mysql-client \r\n")
-        cmd = "sudo apt-get install mysql-server mysql-client && " \
-              "sudo apt-get install libmysqlclient-dev && "
-        output = commands.getoutput(cmd)
-        print(output)
+        # print(">>>>>> Installing mysql-server, mysql-client \r\n")
+        # cmd = "sudo apt-get install mysql-server mysql-client && " \
+        #       "sudo apt-get install libmysqlclient-dev && "
+        # output = commands.getoutput(cmd)
+        # print(output)
 
         print(">>>>>> Pip Installing mysqlclient, airflow[mysql,crypto,password] \r\n")
         cmd = "sudo pip install mysqlclient && " \
