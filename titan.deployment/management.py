@@ -3,10 +3,11 @@ import commands
 import yaml
 import os
 
+
 class Management:
     def __init__(self):
-        #print('init')
-	return
+        # print('init')
+        return
 
     def kubeadm_install(self):
         # install kubeadm
@@ -88,13 +89,25 @@ class Management:
     def airflow_deploy(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd airflow"
-        output = commands.getoutput(cmd)
+        commands.getoutput(cmd)
         path = os.getcwd()
-        cmd = "export AIRFLOW_HOME=" + path\
-              + "sudo apt-get install mysql-server mysql-client && " \
-                "sudo apt-get install libmysqlclient-dev && " \
-                "sudo pip install mysqlclient && " \
-                "pip install airflow[mysql,crypto,password]"
+        cmd = "export AIRFLOW_HOME=" + path
+        commands.getoutput(cmd)
+
+        print(">>>>>> Installing mysql-server, mysql-client, libmysqlclient-dev")
+        cmd = "sudo apt-get install mysql-server mysql-client libmysqlclient-dev"
+        output = commands.getoutput(cmd)
+        print(output)
+
+        print(">>>>>> Installing mysql-server, mysql-client \r\n")
+        cmd = "sudo apt-get install mysql-server mysql-client && " \
+              "sudo apt-get install libmysqlclient-dev && "
+        output = commands.getoutput(cmd)
+        print(output)
+
+        print(">>>>>> Pip Installing mysqlclient, airflow[mysql,crypto,password] \r\n")
+        cmd = "sudo pip install mysqlclient && " \
+              "sudo pip install airflow[mysql,crypto,password]"
         output = commands.getoutput(cmd)
         print(output)
 
@@ -154,7 +167,8 @@ class Management:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-a', '--action', required=True, default=None, help="action to execute. select one from 'k8s', 'ui', 'airflow' and 'all'")
+    parser.add_argument('-a', '--action', required=True, default=None,
+                        help="action to execute. select one from 'k8s', 'ui', 'airflow' and 'all'")
     args = parser.parse_args()
 
     management = Management()
