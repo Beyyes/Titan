@@ -87,7 +87,7 @@ class Management:
 
     def airflow_deploy(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "cd airflow && "
+        cmd = "cd airflow"
         output = commands.getoutput(cmd)
         path = os.getcwd()
         cmd = "export AIRFLOW_HOME=" + path\
@@ -168,7 +168,7 @@ if __name__ == '__main__':
         management.pai_deploy()
     elif args.action == 'pai-clear':
         management.pai_clear()
-    elif args.action == 'airflow':
+    elif args.action == 'airflow-deploy':
         management.airflow_deploy()
     elif args.action == 'grafana':
         management.grafana_deploy()
