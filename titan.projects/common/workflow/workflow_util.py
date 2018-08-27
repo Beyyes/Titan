@@ -137,7 +137,7 @@ def create_dist_tensorflow_job_config(job_name, code_dir, task_num, memory_mb, c
     task_roles = []
     ps_role = {}
     ps_role["name"] = "ps"
-    ps_role["taskNumber"] = 2
+    ps_role["taskNumber"] = 1
     ps_role["cpuNumber"] = 2
     ps_role["memoryMB"] = 1024
     ps_role["gpuNumber"] = 0

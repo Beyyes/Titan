@@ -16,8 +16,8 @@ import os
 #project_name = 'sodex_train3'
 project_name = os.path.splitext(os.path.basename(__file__))[0]
 
-portal_user_name = "admin"
-portal_user_password = "password"
+portal_user_name = "adminadmin"
+portal_user_password = "adminadmin"
 
 #Yarn train job parameter
 train_code_dir = "/path/code/sodex/code"

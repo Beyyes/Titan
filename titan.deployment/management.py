@@ -186,7 +186,7 @@ if __name__ == '__main__':
         management.airflow_deploy()
     elif args.action == 'grafana':
         management.grafana_deploy()
-    elif args.action == 'ui':
+    elif args.action == 'ui-deploy':
         management.ui_deploy()
     elif args.action == 'all':
         management.all_deploy()
