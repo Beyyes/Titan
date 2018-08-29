@@ -141,14 +141,20 @@ class Management:
         # cmd = '"nohup npm start &"'
         output = commands.getoutput(cmd)
         print(output)
+        print("\r\n You can access Titan UI by: master-ip:8000")
 
     def ui_stop(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> stop Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "cd ../titan.ui/ && " \
-              "npm install && " \
-              "npm start"
-        output = commands.getoutput(cmd)
-        print(output)
+        pids = "lsof -i:8000 | awk '{print $2}'"
+
+        count = 0
+        for pid in pids:
+            if count > 0:
+                cmd = "kill " + pid
+                commands.getoutput(cmd)
+            count += 1
+        
+        print("\r\nKill Titan UI process successfully!")
 
     # single node shell, not k8s deployment
     def airflow_deploy_shell(self, airflow_home):
