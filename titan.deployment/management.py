@@ -145,8 +145,8 @@ class Management:
 
     def ui_stop(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> stop Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
-        pids = "lsof -i:8000 | awk '{print $2}'"
-
+        cmd = "lsof -i:8000 | awk '{print $2}'"
+        pids = commands.getoutput(cmd)
         count = 0
         for pid in pids:
             if count > 0:
