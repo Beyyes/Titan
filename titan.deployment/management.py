@@ -151,6 +151,7 @@ class Management:
         for pid in pids:
             if count > 0:
                 cmd = "kill " + pid
+                print(cmd)
                 commands.getoutput(cmd)
             count += 1
 
