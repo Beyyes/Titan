@@ -139,18 +139,13 @@ class Management:
         output = commands.getoutput(cmd)
         print(output)
 
-    # def airflow_deploy(self):
-    #     print(">>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
-    #     cmd = "cd config/airflow && " \
-    #           "sh node-label.sh && " \
-    #           "kubectl create -f airflow-deployment.yaml && " \
-    #           "kubectl create -f airflow-service.yaml"
-    #     output = commands.getoutput(cmd)
-    #     print(output)
-    #
-    # def mysql_deploy(self):
-    #     # a cluster-configuration is needed
-    #     cmd = "./deploy.py -d -p /cluster-configuration/ -s"
+    def ui_stop(self):
+        print(">>>>>>>>>>>>>>>>>>>>>>> stop Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
+        cmd = "cd ../titan.ui/ && " \
+              "npm install && " \
+              "npm start"
+        output = commands.getoutput(cmd)
+        print(output)
 
     # single node shell, not k8s deployment
     def airflow_deploy_shell(self, airflow_home):
@@ -203,6 +198,8 @@ if __name__ == '__main__':
         management.pai_clear()
     elif args.action == 'airflow-deploy':
         management.airflow_deploy()
+    elif args.action == 'airflow-uninstall':
+        management.airflow_uninstall()
     elif args.action == 'grafana':
         management.grafana_deploy()
     elif args.action == 'ui-deploy':

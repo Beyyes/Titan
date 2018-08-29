@@ -26,6 +26,7 @@ project_name = os.path.splitext(os.path.basename(__file__))[0]
 # HDFS Parameter
 hdfs_host = '10.190.148.73'
 hdfs_port = '9000'
+cibn_model_deploy_template_path = '/home/dladmin/airflow/templates/model_deploy.json.template'
 
 # Offline Job Parameter
 jar_hdfs_path = '/cibn/jar/'
