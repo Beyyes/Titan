@@ -153,7 +153,7 @@ class Management:
                 cmd = "kill " + pid
                 commands.getoutput(cmd)
             count += 1
-        
+
         print("\r\nKill Titan UI process successfully!")
 
     # single node shell, not k8s deployment
@@ -213,6 +213,8 @@ if __name__ == '__main__':
         management.grafana_deploy()
     elif args.action == 'ui-deploy':
         management.ui_deploy()
+    elif args.action == 'ui-stop':
+        management.ui_stop()
     elif args.action == 'all':
         management.all_deploy()
     else:
