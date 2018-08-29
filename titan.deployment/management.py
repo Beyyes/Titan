@@ -111,6 +111,25 @@ class Management:
         output = commands.getoutput(cmd)
         print(output)
 
+    def airflow_uninstall(self):
+        print(">>>>>>>>>>>>>>>>>>>>>>> uninstall airflow <<<<<<<<<<<<<<<<<<<<<<<")
+        cmd = "cd airflow"
+        commands.getoutput(cmd)
+        path = os.getcwd()
+        cmd = "export AIRFLOW_HOME=" + path
+        commands.getoutput(cmd)
+
+        print(">>>>>> Installing mysql-server, mysql-client, libmysqlclient-dev")
+        cmd = "sudo apt-get install mysql-server mysql-client libmysqlclient-dev"
+        output = commands.getoutput(cmd)
+        print(output)
+
+        print(">>>>>> Pip Installing mysqlclient, airflow[mysql,crypto,password] \r\n")
+        cmd = "sudo pip install mysqlclient && " \
+              "sudo pip install airflow[mysql,crypto,password]"
+        output = commands.getoutput(cmd)
+        print(output)
+
     # a parameter of port is needed, port 8000 may be conflict with others
     def ui_deploy(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI <<<<<<<<<<<<<<<<<<<<<<<")

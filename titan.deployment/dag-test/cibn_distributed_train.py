@@ -254,3 +254,7 @@ op_eval_model >> op_download_train_output_model
 op_download_train_output_model >> op_build_serving_model
 op_build_serving_model >> op_deploy_serving_model
 op_deploy_serving_model >> op_end
+
+#SERVER=$(kubectl get  svc/seldon-apiserver -n seldon -o jsonpath='{.spec.clusterIP}')
+#TOKEN=`curl -s -H "Accept: application/json" cibnpredictor0.7:oauth-secret@$SERVER:8080/oauth/token -d grant_type=client_credentials | jq -r '.access_token'`
+#curl -s -H "Content-Type:application/json" -H "Accept: application/json" -H "Authorization: Bearer $TOKEN" $SERVER:8080/api/v0.1/predictions -d '{"meta":{},"data":{"ndarray":["1 1:56707:1 2:110192:0%00484602595AC8DCF361014101FCBF15_282101", "1 1:56707:1 2:110192:0%00484602595AC8DCF361014101FCBF15_282101"]}}'
