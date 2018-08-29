@@ -147,6 +147,7 @@ class Management:
         print(">>>>>>>>>>>>>>>>>>>>>>> stop Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "lsof -i:8000 | awk '{print $2}'"
         pids = commands.getoutput(cmd)
+        pids = pids.split(" ")
         count = 0
         for pid in pids:
             if count > 0:
