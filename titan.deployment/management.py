@@ -134,8 +134,11 @@ class Management:
     def ui_deploy(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ../titan.ui/ && " \
-              "npm install && " \
-              "npm start"
+              "npm install"
+        output = commands.getoutput(cmd)
+        print(output)
+        
+        cmd = "nohup npm start &"
         output = commands.getoutput(cmd)
         print(output)
 
