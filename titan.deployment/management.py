@@ -147,8 +147,10 @@ class Management:
         print(">>>>>>>>>>>>>>>>>>>>>>> stop Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "lsof -i:8000 | awk '{print $2}'"
         pids = commands.getoutput(cmd)
-        pids = pids.split(" ")
-        count = 0
+	print("Kill Titan UI process\r\n")
+        pids = pids.split("\n")
+        print(pids)
+	count = 0
         for pid in pids:
             if count > 0:
                 cmd = "kill " + pid
