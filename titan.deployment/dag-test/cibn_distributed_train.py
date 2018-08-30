@@ -236,7 +236,7 @@ def foo(**kwargs):
 
 
 op_bootstrap = PythonOperator(task_id='op_bootstrap', dag=dag, python_callable=on_bootstrap)
-# op_spark = PythonOperator(task_id='op_spark', dag=dag, python_callable=on_spark)
+op_spark = PythonOperator(task_id='op_spark', dag=dag, python_callable=on_spark)
 op_train_model = PythonOperator(task_id='op_train_model', dag=dag, python_callable=on_train_model_yarn)
 op_eval_model = PythonOperator(task_id='op_eval_model', dag=dag, python_callable=on_eval_model_yarn)
 op_download_train_output_model = PythonOperator(task_id='op_download_train_output_model', dag=dag,
@@ -246,10 +246,10 @@ op_build_serving_model = PythonOperator(task_id='op_build_serving_model', dag=da
 op_deploy_serving_model = PythonOperator(task_id='op_deploy_serving_model', dag=dag,
                                          python_callable=on_deploy_serving_model)
 op_end = PythonOperator(task_id='op_end', dag=dag, python_callable=on_end)
-# op_bootstrap >> op_spark
-# op_spark >> op_train_model
 
-op_bootstrap >> op_train_model
+op_bootstrap >> op_spark
+op_spark >> op_train_model
+# op_bootstrap >> op_train_model
 op_train_model >> op_eval_model
 op_eval_model >> op_download_train_output_model
 op_download_train_output_model >> op_build_serving_model
