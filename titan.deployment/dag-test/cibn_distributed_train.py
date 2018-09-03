@@ -30,7 +30,7 @@ cibn_model_deploy_template_path = '/home/dladmin/airflow/templates/model_deploy.
 
 # Offline Job Parameter
 jar_hdfs_path = '/cibn/jar/'
-jar_local_path = '/home/dladmin/cibn/offline'
+jar_local_path = '/home/dladmin/cibn/offline/'
 spark_offline_cmd = 'HADOOP_USER_NAME=qiozou /usr/local/spark/bin/spark-submit --class "DataPreprocess" ' \
                     '--master yarn --deploy-mode cluster {} {} {} ' \
                     '--driver-memory 3g --executor-memory 3g --executor-cores 4 --num-executors 4'
@@ -102,7 +102,7 @@ def on_spark(**kwargs):
 def download_offline_binary(host=hdfs_host):
     shutil.rmtree(jar_local_path)
     jar_files = os.path.join(jar_hdfs_path, '*')
-    mkdir(jar_local_path)
+    wu.mkdir(jar_files)
     wu.copy_hdfs_to_local(jar_files, jar_local_path)
     return jar_local_path
 
