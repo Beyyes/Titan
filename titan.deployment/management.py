@@ -116,7 +116,7 @@ class Management:
         cmd = "pip install kubernetes && " \
               "sudo apt-get update && " \
               "sudo apt-get install mysql-server && " \
-              "service mysql restart && " \
+              "sudo service mysql restart && " \
               "sudo apt-get install libmysqlclient-dev && " \
               "pip install mysqlclient"
         output = commands.getoutput(cmd)
