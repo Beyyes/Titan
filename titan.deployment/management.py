@@ -86,10 +86,10 @@ class Management:
         output = commands.getoutput(cmd)
         print(output)
 
-    def airflow_deploy(self):
+    def airflow_setup(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
 
-        print(">>>>>> Installing pip, python-software-properties, software-properties-common, gcc")
+        print("\r\n >>>>>> Installing pip, python-software-properties, software-properties-common, gcc")
         cmd = "cd ../titan.workflow && " \
               "sudo apt-get install python-setuptools -y && " \
               "curl -LO https://files.pythonhosted.org/packages/ae/e8/2340d46ecadb1692a1e455f13f75e596d4eab3d11a57446f08259dee8f02/pip-10.0.1.tar.gz &&" \
@@ -105,17 +105,15 @@ class Management:
         #cmd = "export AIRFLOW_HOME=" + path
         #commands.getoutput(cmd)
 
-        print(">>>>>> Installing airflow using source code")
+        print("\r\n >>>>>> Installing airflow using source code")
         cmd = "cd ../titan.workflow &&" \
               "sudo python setup.py install"
         output = commands.getoutput(cmd)
         print(output)
 
-        print(">>>>>> AIRFLOW_HOME has been set to $HOME/airflow, and mysql will be installed next, you should input "
-              "the username and password to $HOME/airflow/airflow.cfg !")
-        cmd = "airflow &&" \
-              "cd ~/airflow && " \
-              "pip install kubernetes && " \
+        print("\r\n >>>>>> AIRFLOW_HOME has been set to $HOME/airflow, and mysql will be installed next, you should input "
+              "the username and password to $HOME/airflow/airflow.cfg !! \r\n")
+        cmd = "pip install kubernetes && " \
               "sudo apt-get update && " \
               "sudo apt-get install mysql-server && " \
               "service mysql restart && " \
@@ -124,14 +122,11 @@ class Management:
         output = commands.getoutput(cmd)
         print(output)
 
-        # print(">>>>>> Installing mysql-server, mysql-client \r\n")
-        # cmd = "sudo apt-get install mysql-server mysql-client && " \
-        #       "sudo apt-get install libmysqlclient-dev && "
-        # output = commands.getoutput(cmd)
-        # print(output)
-
-        print(">>>>>> Pip Installing mysqlclient, airflow[mysql,crypto,password] \r\n")
-        cmd = "sudo mkdir -p /usr/lib/systemd/system && " \
+    def airflow_start(self):
+        print("\r\n >>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, make sure you have set the executor and to airflow.cfg <<<<<<<<<<<<<<<<<<<<<<<")
+        cmd = "airflow &&" \
+              "cd ~/airflow && " \
+              "sudo mkdir -p /usr/lib/systemd/system && " \
               "sudo cp airflow/airflow-webserver.service /usr/lib/systemd/system  && " \
               "sudo cp airflow/airflow-scheduler.service /usr/lib/systemd/system && " \
               "sudo systemctl start airflow-webserver && " \
@@ -144,12 +139,6 @@ class Management:
 
         print(">>>>>> Uninstalling airflow")
         cmd = "rm -rf ~/airflow"
-        output = commands.getoutput(cmd)
-        print(output)
-
-        print(">>>>>> Pip Installing mysqlclient, airflow[mysql,crypto,password] \r\n")
-        cmd = "sudo pip install mysqlclient && " \
-              "sudo pip install airflow[mysql,crypto,password]"
         output = commands.getoutput(cmd)
         print(output)
 
@@ -234,8 +223,10 @@ if __name__ == '__main__':
         management.pai_deploy()
     elif args.action == 'pai-clear':
         management.pai_clear()
-    elif args.action == 'airflow-deploy':
-        management.airflow_deploy()
+    elif args.action == 'airflow-setup':
+        management.airflow_setup()
+    elif args.action == 'airflow-start':
+        management.airflow_start()
     elif args.action == 'airflow-uninstall':
         management.airflow_uninstall()
     elif args.action == 'grafana':
