@@ -1,0 +1,6 @@
+[Unit]
+Description=airflow-scheduler
+
+[Service]
+ExecStart=/bin/bash -c "cd ~/airflow; airflow scheduler"
+Restart=always

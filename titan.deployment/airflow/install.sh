@@ -15,14 +15,14 @@ sudo apt-get -y install software-properties-common && \
 sudo apt-get -y install gcc make build-essential libssl-dev libffi-dev python-dev
 
 
-# setup airflow
 # exe dir : titan.workflow
 sudo python setup.py install
 # need this command to create airflow home
 airflow
 
 cd ~/airflow
-pip install kubernetes # QQQ: setup position?
+# is the pip execution position right?
+pip install kubernetes
 sudo apt-get update
 sudo apt-get install mysql-server
 service mysql restart
@@ -32,7 +32,13 @@ pip install mysqlclient
 # sql_alchemy_conn = mysql://root:Pass_word@localhost/airflow
 # executor = LocalExecutor
 
-cd ~/airflow
-airflow initdb
-airflow webserver -p 18880
-airflow scheduler
+sudo mkdir -p /usr/lib/systemd/system
+sudo cp airflow-webserver.service /usr/lib/systemd/system
+sudo cp airflow-scheduler.service /usr/lib/systemd/system
+sudo systemctl start airflow-webserver
+sudo systemctl start airflow-scheduler
+
+#cd ~/airflow
+#airflow initdb
+#airflow webserver -p 18880
+#airflow scheduler
