@@ -21,8 +21,9 @@ class Management:
               "sudo pip install paramiko && " \
               "sudo pip install pyyaml"
         commands.getoutput(cmd)
-        
-        cmd = "sudo python deploy.py -a deploy"
+
+        cmd = "cd ../titan.deployment/kubernetes/ &&  " \
+              "sudo python deploy.py -a deploy"
         output = commands.getoutput(cmd)
         print(output)
 
