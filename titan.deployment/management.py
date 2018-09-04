@@ -11,19 +11,17 @@ class Management:
 
     def kubeadm_install(self):
         # install kubeadm
-        cmd = "pip install paramiko && " \
-              "pip install pyyaml"
-        output = commands.getoutput(cmd)
-        print(output)
-
-        cmd = "cd ../titan.deployment/kubernetes/ && " \
-              "sudo ./deploy.py -a deploy"
-        output = commands.getoutput(cmd)
-        print(output)
+        return
 
     def k8s_deploy(self):
         # deploy k8s cluster
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s cluster using kubeadm <<<<<<<<<<<<<<<<<<<<<<<")
+
+        cmd = "pip install paramiko && " \
+              "pip install pyyaml"
+        output = commands.getoutput(cmd)
+        #print(output)
+
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo python deploy.py -a deploy"
         output = commands.getoutput(cmd)
