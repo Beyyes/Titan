@@ -5,6 +5,7 @@ printInfo(){
 }
 
 username=$1
+echo username
 
 ./prepare_env.sh
 
