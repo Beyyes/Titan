@@ -15,20 +15,19 @@ class Management:
 
     def k8s_deploy(self):
         # deploy k8s cluster
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s cluster using kubeadm, this may take a few minutes <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s cluster using kubeadm, this may take a few minutes <<<<<<<<<<<<<<<<<<<<<<<\r\n")
 
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo pip install paramiko && " \
               "sudo pip install pyyaml"
         commands.getoutput(cmd)
-
         cmd = "cd ../titan.deployment/kubernetes/ &&  " \
               "sudo python deploy.py -a deploy"
         output = commands.getoutput(cmd)
         print(output)
 
         # deploy k8s dashboard
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<\r\n")
         cmd = "cd kubernetes/dashboard && " \
               "kubectl create -f dashboard-rbac.yaml && " \
               "kubectl create -f dashboard-controller.yaml && " \
@@ -37,19 +36,24 @@ class Management:
         print(output)
 
     def k8s_reset(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall k8s cluster <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "sudo rm -rf /var/lib/cni/ && " \
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall k8s cluster <<<<<<<<<<<<<<<<<<<<<<<\r\n")
+
+        cmd = "sudo systemctl stop kubelet && " \
+              "sudo systemctl stop docker && " \
+              "sudo rm -rf /var/lib/cni/ && " \
               "sudo rm -rf /var/lib/kubelet/* &&" \
               "sudo rm -rf /etc/cni/ && " \
               "sudo rm -rf /etc/kubernetes && " \
               "cd ../titan.deployment/kubernetes/ && " \
-              "sudo python deploy.py -a reset"
+              "sudo python deploy.py -a reset && " \
+              "sudo systemctl start kubelet && " \
+              "sudo systemctl start docker"
         output = commands.getoutput(cmd)
         print(output)
 
     # maybe we also need a k8s service/deployment cleaning script
     def k8s_dashboard_deploy(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<\r\n")
         cmd = "cd kubernetes/dashboard && " \
               "kubectl create -f dashboard-rbac.yaml && " \
               "kubectl create -f dashboard-controller.yaml && " \
@@ -59,7 +63,7 @@ class Management:
         print ("You can access k8s dashboard by port 30280\r\n")
 
     def pai_deploy(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<\r\n")
         # with open("config/cluster-config.yaml", "r") as k8s_cluster_file:
         #     yaml_obj = yaml.load(k8s_cluster_file.read())
         #
@@ -84,7 +88,7 @@ class Management:
         print(output)
 
     def pai_clear(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> clean PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> clean PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<\r\n")
 
         # a cluster-configuration is needed
         cmd = "cd pai/pai-management && " \
@@ -94,7 +98,7 @@ class Management:
         print(output)
 
     def airflow_setup(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<\r\n")
 
         print("\r\n >>>>>> Installing pip, python-software-properties, software-properties-common, gcc")
         cmd = "cd ../titan.workflow && " \
