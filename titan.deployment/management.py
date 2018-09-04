@@ -15,7 +15,7 @@ class Management:
 
     def k8s_deploy(self):
         # deploy k8s cluster
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s cluster using kubeadm <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s cluster using kubeadm, this may take a few minutes <<<<<<<<<<<<<<<<<<<<<<<")
 
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo pip install paramiko && " \
@@ -38,7 +38,11 @@ class Management:
 
     def k8s_reset(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall k8s cluster <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "cd ../titan.deployment/kubernetes/ && " \
+        cmd = "sudo rm -rf /var/lib/cni/ && " \
+              "sudo rm -rf /var/lib/kubelet/* &&" \
+              "sudo rm -rf /etc/cni/ && " \
+              "sudo rm -rf /etc/kubernetes && " \
+              "cd ../titan.deployment/kubernetes/ && " \
               "sudo python deploy.py -a reset"
         output = commands.getoutput(cmd)
         print(output)

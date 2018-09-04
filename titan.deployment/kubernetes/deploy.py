@@ -4,6 +4,7 @@ from os import listdir
 from os.path import isfile, join
 import subprocess
 import argparse
+import logging
 
 class Deployment:
 
