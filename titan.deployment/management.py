@@ -177,35 +177,19 @@ class Management:
 
         print("\r\nKill Titan UI process successfully!")
 
-    # single node shell, not k8s deployment
-    def airflow_deploy_shell(self, airflow_home):
-        cmd = "export AIRFLOW_HOME=" + airflow_home + \
-              "apt-get install mysql-server mysql-client && " \
-              "kubectl create -f airflow-deployment.yaml && " \
-              "kubectl create -f airflow-service.yaml"
-        output = commands.getoutput(cmd)
-        print(output)
+    def add_node(self):
+        print(">>>>>>>>>>>>>>>>>>>>>>> add new node <<<<<<<<<<<<<<<<<<<<<<<")
 
-    def seldon_deploy(self):
-        print(">>>>>>>>>>>>>>>>>>>>>>> deploy seldon <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "cd ../titan.deployment/seldon/script && " \
-              "sudo ./install_seldon.sh"
-        output = commands.getoutput(cmd)
-        print(output)
+        cmd = "lsof -i:8000 | awk '{print $2}'"
+        pids = commands.getoutput(cmd)
+        print("Kill Titan UI process\r\n")
 
-    def grafana_deploy(self):
-        cmd = "cd config/grafana && " \
-              "sh node-label.sh && " \
-              "kubectl create -f grafana-deployment.yaml && " \
-              "kubectl create -f grafana-service.yaml"
-        output = commands.getoutput(cmd)
-        print(output)
+        print("\r\n add new node successfully!")
 
     def all_deploy(self):
         print('all-deploy')
         self.k8s_deploy()
-        self.airflow_deploy()
-        self.grafana_deploy()
+        self.airflow_setup()
         self.ui_deploy()
 
 
@@ -232,12 +216,12 @@ if __name__ == '__main__':
         management.airflow_start()
     elif args.action == 'airflow-uninstall':
         management.airflow_uninstall()
-    elif args.action == 'grafana':
-        management.grafana_deploy()
     elif args.action == 'ui-deploy':
         management.ui_deploy()
     elif args.action == 'ui-stop':
         management.ui_stop()
+    elif args.action == 'add-node':
+        management.add_node()
     elif args.action == 'all':
         management.all_deploy()
     else:
