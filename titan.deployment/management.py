@@ -112,20 +112,21 @@ class Management:
         print(output)
 
         print("\r\n >>>>>> AIRFLOW_HOME has been set to $HOME/airflow, and mysql will be installed next, you should input "
-              "the username and password to $HOME/airflow/airflow.cfg !! \r\n")
-        cmd = "pip install kubernetes && " \
+              "the username and password and set LocalExecutor to $HOME/airflow/airflow.cfg !! \r\n")
+        cmd = "sudo pip install kubernetes && " \
               "sudo apt-get update && " \
               "sudo apt-get install mysql-server && " \
               "sudo service mysql restart && " \
               "sudo apt-get install libmysqlclient-dev && " \
-              "pip install mysqlclient"
+              "sudo pip install mysqlclient"
         output = commands.getoutput(cmd)
         print(output)
 
     def airflow_start(self):
-        print("\r\n >>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, make sure you have set the executor and to airflow.cfg <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "airflow &&" \
-              "cd ~/airflow && " \
+        print("\r\n >>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, make sure you have set the Executor and MySQL auth to airflow.cfg, and create Dags file"
+              "in ~/airflow/dags <<<<<<<<<<<<<<<<<<<<<<<")
+        cmd = "cd ~/airflow && " \
+              "mkdir dags && " \
               "sudo mkdir -p /usr/lib/systemd/system && " \
               "sudo cp airflow/airflow-webserver.service /usr/lib/systemd/system  && " \
               "sudo cp airflow/airflow-scheduler.service /usr/lib/systemd/system && " \
@@ -137,8 +138,10 @@ class Management:
     def airflow_uninstall(self):
         print(">>>>>>>>>>>>>>>>>>>>>>> uninstall airflow <<<<<<<<<<<<<<<<<<<<<<<")
 
-        print(">>>>>> Uninstalling airflow")
-        cmd = "rm -rf ~/airflow"
+        print(">>>>>> remove ~/airflow and systemctl stop airflow-webserver and airflow-scheduler")
+        cmd = "rm -rf ~/airflow &&" \
+              "sudo systemctl stop airflow-webserver &&" \
+              "sudo systemctl stop airflow-scheduler"
         output = commands.getoutput(cmd)
         print(output)
 
