@@ -2,11 +2,11 @@ import argparse
 import commands
 import yaml
 import os
-
+import logging
+import logging.config
 
 class Management:
     def __init__(self):
-        # print('init')
         return
 
     def kubeadm_install(self):
@@ -18,7 +18,7 @@ class Management:
 
     def k8s_deploy(self):
         # deploy k8s cluster
-        print(">>>>>>>>>>>>>>>>>>>>>>> deploy k8s cluster using kubeadm <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s cluster using kubeadm <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo python deploy.py -a deploy"
         output = commands.getoutput(cmd)
@@ -34,7 +34,7 @@ class Management:
         print(output)
 
     def k8s_reset(self):
-        print(">>>>>>>>>>>>>>>>>>>>>>> reset k8s cluster <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> reset k8s cluster <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo python deploy.py -a reset"
         output = commands.getoutput(cmd)
@@ -42,7 +42,7 @@ class Management:
 
     # maybe we also need a k8s service/deployment cleaning script
     def k8s_dashboard_deploy(self):
-        print(">>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd kubernetes/dashboard && " \
               "kubectl create -f dashboard-rbac.yaml && " \
               "kubectl create -f dashboard-controller.yaml && " \
@@ -52,7 +52,7 @@ class Management:
         print ("You can access k8s dashboard by port 30280\r\n")
 
     def pai_deploy(self):
-        print(">>>>>>>>>>>>>>>>>>>>>>> deploy PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<")
         # with open("config/cluster-config.yaml", "r") as k8s_cluster_file:
         #     yaml_obj = yaml.load(k8s_cluster_file.read())
         #
@@ -77,7 +77,7 @@ class Management:
         print(output)
 
     def pai_clear(self):
-        print(">>>>>>>>>>>>>>>>>>>>>>> clean PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> clean PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<")
 
         # a cluster-configuration is needed
         cmd = "cd pai/pai-management && " \
@@ -87,7 +87,7 @@ class Management:
         print(output)
 
     def airflow_setup(self):
-        print(">>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<")
 
         print("\r\n >>>>>> Installing pip, python-software-properties, software-properties-common, gcc")
         cmd = "cd ../titan.workflow && " \
@@ -123,7 +123,7 @@ class Management:
         print(output)
 
     def airflow_start(self):
-        print("\r\n >>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, make sure you have set the Executor and MySQL auth to airflow.cfg, and create Dags file"
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, make sure you have set the Executor and MySQL auth to airflow.cfg, and create Dags file"
               "in ~/airflow/dags <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ~/airflow && " \
               "mkdir dags && " \
@@ -136,7 +136,7 @@ class Management:
         print(output)
 
     def airflow_uninstall(self):
-        print(">>>>>>>>>>>>>>>>>>>>>>> uninstall airflow <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall airflow <<<<<<<<<<<<<<<<<<<<<<<")
 
         print(">>>>>> remove ~/airflow and systemctl stop airflow-webserver and airflow-scheduler")
         cmd = "rm -rf ~/airflow &&" \
@@ -147,7 +147,7 @@ class Management:
 
     # a parameter of port is needed, port 8000 may be conflict with others
     def ui_deploy(self):
-        print(">>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ../titan.ui/ && " \
               "sh start.sh"
         # output = commands.getoutput(cmd)
@@ -156,10 +156,10 @@ class Management:
         # cmd = '"nohup npm start &"'
         output = commands.getoutput(cmd)
         print(output)
-        print("\r\n You can access Titan UI by: master-ip:8000")
+        print("\r\nYou can access Titan UI by: master-ip:8000")
 
     def ui_stop(self):
-        print(">>>>>>>>>>>>>>>>>>>>>>> stop Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> stop Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
 
         cmd = "lsof -i:8000 | awk '{print $2}'"
         pids = commands.getoutput(cmd)
@@ -178,10 +178,14 @@ class Management:
         print("\r\nKill Titan UI process successfully!")
 
     def add_node(self):
-        print(">>>>>>>>>>>>>>>>>>>>>>> add new node <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> add new node <<<<<<<<<<<<<<<<<<<<<<<")
 
-        cmd = "lsof -i:8000 | awk '{print $2}'"
-        pids = commands.getoutput(cmd)
+
+        token = commands.getoutput("sudo kubeadm token create")
+        hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
+                                  "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
+        # bjag6l.tgr33e1wxkieoop1
+
         print("Kill Titan UI process\r\n")
 
         print("\r\n add new node successfully!")

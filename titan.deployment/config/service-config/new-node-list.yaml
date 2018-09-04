@@ -16,7 +16,7 @@ machine-list:
       hostip: 10.190.176.175
       machine-type: NC24R
       #sshport: PORT
-      #username: username
-      #password: password
+      username: dladmin
+      password: Pass_word
       k8s-role: worker
       pai-worker: "true"
