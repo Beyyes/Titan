@@ -34,7 +34,7 @@ class Management:
         print(output)
 
     def k8s_reset(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> reset k8s cluster <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall k8s cluster <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo python deploy.py -a reset"
         output = commands.getoutput(cmd)

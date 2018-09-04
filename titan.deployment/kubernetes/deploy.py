@@ -34,7 +34,7 @@ class Deployment:
     def deployMaster(self):
         host = self.hosts['master'][0]
         self.transferScripts(host)
-        cmd = "cd /home/{0}/{1}/ && sudo ./init_master.sh".format(host.username, self.script_folder)
+        cmd = "cd /home/{0}/{1}/ && sudo ./init_master.sh {2}".format(host.username, self.script_folder, host.username)
         output = self.remoteTool.execute_cmd(host, cmd)
         self.join_cmd = self.extract_join_cmd(output['out'])
 
