@@ -47,6 +47,7 @@ class Deployment:
         for host in self.hosts['slave']:
             self.transferScripts(host)
             prepare_cmd = "cd /home/{0}/{1}/ && sudo ./prepare_env.sh".format(host.username, self.script_folder)
+            print("!!!!" + prepare_cmd)
             self.remoteTool.execute_cmd(host, prepare_cmd)
             join_cmd = "sudo {0}".format(self.join_cmd)
             self.remoteTool.execute_cmd(host, join_cmd)
