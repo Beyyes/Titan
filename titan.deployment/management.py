@@ -28,13 +28,14 @@ class Management:
 
         # deploy k8s dashboard
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<\r\n")
-        cmd = "kubectl proxy --port=8080 &&" \
-              "cd kubernetes/dashboard && " \
+        # cmd = "kubectl proxy --port=8080 &&" \
+        cmd = "cd kubernetes/dashboard && " \
               "kubectl create -f dashboard-rbac.yaml && " \
               "kubectl create -f dashboard-controller.yaml && " \
               "kubectl create -f dashboard-service.yaml"
         output = commands.getoutput(cmd)
         print(output)
+        print ("You can access k8s dashboard by port 30280\r\n")
 
     def k8s_reset(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall k8s cluster <<<<<<<<<<<<<<<<<<<<<<<\r\n")
@@ -47,6 +48,7 @@ class Management:
               "sudo rm -rf /var/lib/kubelet/* &&" \
               "sudo rm -rf /etc/cni/ && " \
               "sudo rm -rf /etc/kubernetes && " \
+              "sudo rm -rf /var/lib/etcd &&" \
               "sudo systemctl start kubelet && " \
               "sudo systemctl start docker"
         output = commands.getoutput(cmd)
