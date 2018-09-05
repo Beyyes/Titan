@@ -40,18 +40,10 @@ class Management:
     def k8s_reset(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall k8s cluster <<<<<<<<<<<<<<<<<<<<<<<\r\n")
 
-        # cmd = "cd ../titan.deployment/kubernetes/ && ./" \
-        #       "sudo python deploy.py -a reset && " \
-        #       "sudo systemctl stop kubelet && " \
-        #       "sudo systemctl stop docker && " \
-        #       "sudo rm -rf /var/lib/cni/ && " \
-        #       "sudo rm -rf /var/lib/kubelet/* &&" \
-        #       "sudo rm -rf /etc/cni/ && " \
-        #       "sudo rm -rf /etc/kubernetes && " \
-        #       "sudo rm -rf /var/lib/etcd &&" \
-        #       "sudo systemctl start kubelet && " \
-        #       "sudo systemctl start docker"
-        cmd = "cd kubernetes/dashboard && ./create_k8s_dashboard.sh"
+        cmd = "cd ../titan.deployment/kubernetes/ && sudo python deploy.py -a reset"
+        output = commands.getoutput(cmd)
+        print(output)
+        cmd = "cd kubernetes/script && sh reset_k8s.sh"
         output = commands.getoutput(cmd)
         print(output)
 
