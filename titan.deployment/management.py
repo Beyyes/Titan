@@ -120,18 +120,19 @@ class Management:
         print(commands.getoutput(cmd))
 
         print("\r\n >>>>>> Installing mysql-server and mysql-client")
-        print(commands.getoutput("sudo apt-get install mysql-server -y"))
-        print(commands.getoutput("sudo service mysql restart\r\n"))
-        print(commands.getoutput("sudo apt-get install libmysqlclient-dev -y\r\n"))
-        print(commands.getoutput("sudo pip install kubernetes\r\n"))
-        print(commands.getoutput("sudo pip install mysqlclient"))
+        print(commands.getoutput("sudo apt-get install mysql-server -y") + "\r\n")
+        print(commands.getoutput("sudo service mysql restart") + "\r\n" )
+        print(commands.getoutput("sudo apt-get install libmysqlclient-dev -y") + "\r\n")
+        print(commands.getoutput("sudo pip install kubernetes") + "\r\n" )
+        print(commands.getoutput("sudo pip install mysqlclient") + "\r\n" )
 
         print("\r\n >>>>>> AIRFLOW_HOME has been set to $HOME/airflow, you need"
               "input the username and password and set LocalExecutor to $HOME/airflow/airflow.cfg !! \r\n")
 
 
     def airflow_start(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, make sure you have set the Executor and MySQL auth to airflow.cfg, and create Dags file"
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, create airflow database in mysql,"
+              "make sure you have set the Executor and MySQL auth to airflow.cfg, and create Dags file"
               " in ~/airflow/dags <<<<<<<<<<<<<<<<<<<<<<<")
 
         # print(commands.getoutput("sudo service mysql restart"))
