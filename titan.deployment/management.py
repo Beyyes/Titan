@@ -29,7 +29,7 @@ class Management:
         # deploy k8s dashboard
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<\r\n")
         # cmd = "kubectl proxy --port=8080 &&" \
-        cmd = "cd kubernetes/dashboard && ./create_k8s_dashboard.sh"
+        cmd = "cd kubernetes/dashboard && sh create_k8s_dashboard.sh"
               # "kubectl create -f dashboard-rbac.yaml && " \
               # "kubectl create -f dashboard-controller.yaml && " \
               # "kubectl create -f dashboard-service.yaml"
