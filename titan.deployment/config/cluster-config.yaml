@@ -1,20 +1,20 @@
 host-list:
-- hostname: spark-master
-  ip: 10.190.148.73
+- hostname: spark-slave2
+  ip: 10.190.178.19 
   port: 22
   role: master
   username: dladmin
   password: Pass_word
 
-- hostname: spark-slave1
-  ip: 10.190.150.233
+- hostname: spark-slave3
+  ip: 10.190.176.175 
   port: 22
   role: slave
   username: dladmin
   password: Pass_word
 
-- hostname: spark-slave2
-  ip: 10.190.178.19
+- hostname: spark-slave4
+  ip: 10.190.177.242
   port: 22
   role: slave
   username: dladmin
