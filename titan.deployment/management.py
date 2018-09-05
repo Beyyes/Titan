@@ -29,10 +29,10 @@ class Management:
         # deploy k8s dashboard
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<\r\n")
         # cmd = "kubectl proxy --port=8080 &&" \
-        cmd = "cd kubernetes/dashboard && " \
-              "kubectl create -f dashboard-rbac.yaml && " \
-              "kubectl create -f dashboard-controller.yaml && " \
-              "kubectl create -f dashboard-service.yaml"
+        cmd = "cd kubernetes/dashboard && ./create_k8s_dashboard.sh"
+              # "kubectl create -f dashboard-rbac.yaml && " \
+              # "kubectl create -f dashboard-controller.yaml && " \
+              # "kubectl create -f dashboard-service.yaml"
         output = commands.getoutput(cmd)
         print(output)
         print ("You can access k8s dashboard by port 30280\r\n")
@@ -40,30 +40,28 @@ class Management:
     def k8s_reset(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall k8s cluster <<<<<<<<<<<<<<<<<<<<<<<\r\n")
 
-        cmd = "cd ../titan.deployment/kubernetes/ && " \
-              "sudo python deploy.py -a reset && " \
-              "sudo systemctl stop kubelet && " \
-              "sudo systemctl stop docker && " \
-              "sudo rm -rf /var/lib/cni/ && " \
-              "sudo rm -rf /var/lib/kubelet/* &&" \
-              "sudo rm -rf /etc/cni/ && " \
-              "sudo rm -rf /etc/kubernetes && " \
-              "sudo rm -rf /var/lib/etcd &&" \
-              "sudo systemctl start kubelet && " \
-              "sudo systemctl start docker"
+        # cmd = "cd ../titan.deployment/kubernetes/ && ./" \
+        #       "sudo python deploy.py -a reset && " \
+        #       "sudo systemctl stop kubelet && " \
+        #       "sudo systemctl stop docker && " \
+        #       "sudo rm -rf /var/lib/cni/ && " \
+        #       "sudo rm -rf /var/lib/kubelet/* &&" \
+        #       "sudo rm -rf /etc/cni/ && " \
+        #       "sudo rm -rf /etc/kubernetes && " \
+        #       "sudo rm -rf /var/lib/etcd &&" \
+        #       "sudo systemctl start kubelet && " \
+        #       "sudo systemctl start docker"
+        cmd = "cd kubernetes/dashboard && ./create_k8s_dashboard.sh"
         output = commands.getoutput(cmd)
         print(output)
 
     # maybe we also need a k8s service/deployment cleaning script
     def k8s_dashboard_deploy(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<\r\n")
-        cmd = "cd kubernetes/dashboard && " \
-              "kubectl create -f dashboard-rbac.yaml && " \
-              "kubectl create -f dashboard-controller.yaml && " \
-              "kubectl create -f dashboard-service.yaml"
+        cmd = "cd kubernetes/dashboard && ./create_k8s_dashboard.sh"
         output = commands.getoutput(cmd)
         print(output)
-        print ("You can access k8s dashboard by port 30280\r\n")
+        print ("\r\nYou can access k8s dashboard by port 30280")
 
     def pai_deploy(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<\r\n")
@@ -81,8 +79,10 @@ class Management:
         #     # pai_cluster_file["machine-list"] = 0
         #     yaml.dump(yaml_obj, pai_cluster_file)
 
-        configpath = os.getcwd() + "/config/service-config"
         # a cluster-configuration is needed
+        configpath = os.getcwd() + "/config/service-config"
+
+
         cmd = "git clone https://github.com/Beyyes/pai && " \
               "cd pai/pai-management && " \
               "git checkout deploy_for_titan_prod && " \
@@ -93,10 +93,7 @@ class Management:
     def pai_clean(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> clean PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<\r\n")
 
-        # a cluster-configuration is needed
-        cmd = "cd pai/pai-management && " \
-              "git checkout deploy_for_titan_prod && " \
-              "sudo python cleanup-service.py"
+        cmd = "cd pai/pai-management && git checkout deploy_for_titan_prod && sudo python cleanup-service.py"
         output = commands.getoutput(cmd)
         print(output)
 
