@@ -128,7 +128,7 @@ class Management:
               "in ~/airflow/dags <<<<<<<<<<<<<<<<<<<<<<<")
 
         cmd = "sudo pip install kubernetes && " \
-              "sudo apt-get update && " \     
+              "sudo apt-get update && " \
               "sudo service mysql restart && " \
               "sudo apt-get install libmysqlclient-dev && " \
               "sudo pip install mysqlclient"
