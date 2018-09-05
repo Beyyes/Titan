@@ -37,6 +37,7 @@ spec:
             port: 9090
           initialDelaySeconds: 30
           timeoutSeconds: 30
+      nodeSelector:
       tolerations:
       - key: "CriticalAddonsOnly"
         operator: "Exists"
