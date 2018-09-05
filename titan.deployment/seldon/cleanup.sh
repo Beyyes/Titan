@@ -19,11 +19,11 @@
 
 pushd $(dirname "$0") > /dev/null
 
-kubectl delete svc spark-historyserver-web
-kubectl delete svc spark-base
-kubectl delete sts spark-base
+#kubectl delete svc spark-historyserver-web
+#kubectl delete svc spark-base
+#kubectl delete sts spark-base
 
-kubectl label nodes spark-master sparkrole-
+#kubectl label nodes spark-master sparkrole-
 
 kubectl delete -f sklearn_iris_deployment.json -n seldon
 kubectl delete svc --all -n seldon

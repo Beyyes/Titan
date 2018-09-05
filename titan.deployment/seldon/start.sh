@@ -78,11 +78,14 @@ sleep 5
 # echo "install seldon-core-analytics"
 # deploy seldon portal
 kubectl create clusterrolebinding seldon-binding --clusterrole=cluster-admin --serviceaccount=seldon:default
+echo "clusterrolebinding created"
 
 sudo helm install seldon-core-analytics --version 0.2 --name seldon-core-analytics --set grafana_prom_admin_password=password --set persistence.enabled=false --repo https://storage.googleapis.com/seldon-charts --namespace seldon
+echo "seldon-core-analytics installed"
 
 # deploy seldon application
 kubectl apply -f sklearn_iris_deployment.json -n seldon
+echo "apply sklearn_iris_deployment"
 
 # get token
 sudo apt-get install jq

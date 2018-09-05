@@ -76,6 +76,7 @@ class Management:
               "git checkout deploy_for_titan_prod && " \
               "sudo python deploy.py -d -p " + configpath
         output = commands.getoutput(cmd)
+        print(output)
 
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy seldon <<<<<<<<<<<<<<<<<<<<<<<\r\n")
         cmd = "cd seldon && sh start.sh"
@@ -86,6 +87,10 @@ class Management:
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> clean PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<\r\n")
 
         cmd = "cd pai/pai-management && git checkout deploy_for_titan_prod && sudo python cleanup-service.py"
+        output = commands.getoutput(cmd)
+        print(output)
+
+        cmd = "cd seldon && sh cleanup.sh"
         output = commands.getoutput(cmd)
         print(output)
 
