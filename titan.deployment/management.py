@@ -126,23 +126,36 @@ class Management:
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, make sure you have set the Executor and MySQL auth to airflow.cfg, and create Dags file"
               " in ~/airflow/dags <<<<<<<<<<<<<<<<<<<<<<<")
 
-        cmd = "sudo pip install kubernetes && " \
-              "sudo apt-get update && " \
-              "sudo service mysql restart && " \
-              "sudo apt-get install libmysqlclient-dev && " \
-              "sudo pip install mysqlclient"
-        output = commands.getoutput(cmd)
-        print(output)
+        print(commands.getoutput("sudo pip install kubernetes"))
+        print(commands.getoutput("sudo service mysql restart"))
+        print(commands.getoutput("sudo apt-get install libmysqlclient-dev"))
+        print(commands.getoutput("sudo pip install mysqlclient"))
+        # print(commands.getoutput("sudo service mysql restart"))
+        # print(commands.getoutput("sudo service mysql restart"))
+        # cmd = "sudo pip install kubernetes && " \
+        #       "sudo apt-get update && " \
+        #       "sudo service mysql restart && " \
+        #       "sudo apt-get install libmysqlclient-dev && " \
+        #       "sudo pip install mysqlclient"
+        # output = commands.getoutput(cmd)
+        # print(output)
 
-        cmd = "airflow && cd ~/airflow && " \
-              "mkdir dags && " \
-              "sudo mkdir -p /usr/lib/systemd/system && " \
-              "sudo cp airflow/airflow-webserver.service /usr/lib/systemd/system  && " \
-              "sudo cp airflow/airflow-scheduler.service /usr/lib/systemd/system && " \
-              "sudo systemctl start airflow-webserver && " \
-              "sudo systemctl start airflow-scheduler"
-        output = commands.getoutput(cmd)
-        print(output)
+        print(commands.getoutput("airflow && cd ~/airflow"))
+        print(commands.getoutput("mkdir dags"))
+        print(commands.getoutput("sudo mkdir -p /usr/lib/systemd/system"))
+        print(commands.getoutput("sudo cp airflow/airflow-webserver.service /usr/lib/systemd/system"))
+        print(commands.getoutput("sudo cp airflow/airflow-scheduler.service /usr/lib/systemd/system"))
+        print(commands.getoutput("sudo systemctl start airflow-webserver"))
+        print(commands.getoutput("sudo systemctl start airflow-scheduler"))
+        # cmd = "airflow && cd ~/airflow && " \
+        #       "mkdir dags && " \
+        #       "sudo mkdir -p /usr/lib/systemd/system && " \
+        #       "sudo cp airflow/airflow-webserver.service /usr/lib/systemd/system  && " \
+        #       "sudo cp airflow/airflow-scheduler.service /usr/lib/systemd/system && " \
+        #       "sudo systemctl start airflow-webserver && " \
+        #       "sudo systemctl start airflow-scheduler"
+        # output = commands.getoutput(cmd)
+        # print(output)
 
     def airflow_clean(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall airflow <<<<<<<<<<<<<<<<<<<<<<<")
