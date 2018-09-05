@@ -123,8 +123,8 @@ class Management:
               "and input the username and password and set LocalExecutor to $HOME/airflow/airflow.cfg !! \r\n")
 
         cmd = "sudo apt-get install mysql-server && "\
-              "sudo service mysql restart && " \
-              "sudo pip install mysqlclient"
+              #"sudo service mysql restart && " \
+              #"sudo pip install mysqlclient"
         output = commands.getoutput(cmd)
         print(output)
 
