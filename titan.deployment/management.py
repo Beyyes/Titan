@@ -119,21 +119,22 @@ class Management:
               "sudo python setup.py install"
         output = commands.getoutput(cmd)
         print(output)
+        print("\r\n >>>>>> AIRFLOW_HOME has been set to $HOME/airflow, you need install mysql using 'sudo apt-get install mysql-server' "
+              "and input the username and password and set LocalExecutor to $HOME/airflow/airflow.cfg !! \r\n")
+        # "sudo apt-get install mysql-server && " \
 
-        print("\r\n >>>>>> AIRFLOW_HOME has been set to $HOME/airflow, and mysql will be installed next, you should input "
-              "the username and password and set LocalExecutor to $HOME/airflow/airflow.cfg !! \r\n")
+    def airflow_start(self):
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, make sure you have set the Executor and MySQL auth to airflow.cfg, and create Dags file"
+              "in ~/airflow/dags <<<<<<<<<<<<<<<<<<<<<<<")
+
         cmd = "sudo pip install kubernetes && " \
-              "sudo apt-get update && " \
-              "sudo apt-get install mysql-server && " \
+              "sudo apt-get update && " \     
               "sudo service mysql restart && " \
               "sudo apt-get install libmysqlclient-dev && " \
               "sudo pip install mysqlclient"
         output = commands.getoutput(cmd)
         print(output)
 
-    def airflow_start(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, make sure you have set the Executor and MySQL auth to airflow.cfg, and create Dags file"
-              "in ~/airflow/dags <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ~/airflow && " \
               "mkdir dags && " \
               "sudo mkdir -p /usr/lib/systemd/system && " \
