@@ -90,7 +90,7 @@ class Management:
         output = commands.getoutput(cmd)
         print(output)
 
-    def pai_clear(self):
+    def pai_clean(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> clean PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<\r\n")
 
         # a cluster-configuration is needed
@@ -100,7 +100,7 @@ class Management:
         output = commands.getoutput(cmd)
         print(output)
 
-    def airflow_setup(self):
+    def airflow_deploy(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<\r\n")
 
         print("\r\n >>>>>> Installing pip, python-software-properties, software-properties-common, gcc")
@@ -149,7 +149,7 @@ class Management:
         output = commands.getoutput(cmd)
         print(output)
 
-    def airflow_uninstall(self):
+    def airflow_clean(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall airflow <<<<<<<<<<<<<<<<<<<<<<<")
 
         print(">>>>>> remove ~/airflow and systemctl stop airflow-webserver and airflow-scheduler")
@@ -172,7 +172,7 @@ class Management:
         print(output)
         print("\r\nYou can access Titan UI by: master-ip:8000")
 
-    def ui_stop(self):
+    def ui_clean(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> stop Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
 
         cmd = "lsof -i:8000 | awk '{print $2}'"
@@ -207,7 +207,7 @@ class Management:
     def all_deploy(self):
         print('all-deploy')
         self.k8s_deploy()
-        self.airflow_setup()
+        self.airflow_deploy()
         self.ui_deploy()
 
 
@@ -220,24 +220,24 @@ if __name__ == '__main__':
     management = Management()
     if args.action == 'k8s-deploy':
         management.k8s_deploy()
-    elif args.action == 'k8s-reset':
+    elif args.action == 'k8s-clean':
         management.k8s_reset()
     elif args.action == 'k8s-dashboard':
         management.k8s_dashboard_deploy()
     elif args.action == 'pai-deploy':
         management.pai_deploy()
-    elif args.action == 'pai-clear':
-        management.pai_clear()
-    elif args.action == 'airflow-setup':
-        management.airflow_setup()
+    elif args.action == 'pai-clean':
+        management.pai_clean()
+    elif args.action == 'airflow-deploy':
+        management.airflow_deploy()
     elif args.action == 'airflow-start':
         management.airflow_start()
-    elif args.action == 'airflow-uninstall':
-        management.airflow_uninstall()
+    elif args.action == 'airflow-clean':
+        management.airflow_clean()
     elif args.action == 'ui-deploy':
         management.ui_deploy()
-    elif args.action == 'ui-stop':
-        management.ui_stop()
+    elif args.action == 'ui-clean':
+        management.ui_clean()
     elif args.action == 'add-node':
         management.add_node()
     elif args.action == 'all':
