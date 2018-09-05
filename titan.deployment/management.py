@@ -39,14 +39,14 @@ class Management:
         cmd = "cd ../titan.deployment/kubernetes/ && sudo python deploy.py -a reset"
         output = commands.getoutput(cmd)
         print(output)
-	cmd = "cd kubernetes/script && sh reset_k8s.sh"
+        cmd = "cd kubernetes/script && sh reset_k8s.sh"
         output = commands.getoutput(cmd)
         print(output)
 
     # maybe we also need a k8s service/deployment cleaning script
     def k8s_dashboard_deploy(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<\r\n")
-        cmd = "cd kubernetes/dashboard && ./create_k8s_dashboard.sh"
+        cmd = "cd kubernetes/dashboard && sh create_k8s_dashboard.sh"
         output = commands.getoutput(cmd)
         print(output)
         print ("\r\nYou can access k8s dashboard by port 30280")
@@ -70,11 +70,15 @@ class Management:
         # a cluster-configuration is needed
         configpath = os.getcwd() + "/config/service-config"
 
-
-        cmd = "git clone https://github.com/Beyyes/pai && " \
+        cmd = "sudo rm -rf pai && " \
+              "git clone https://github.com/Beyyes/pai && " \
               "cd pai/pai-management && " \
               "git checkout deploy_for_titan_prod && " \
               "sudo python deploy.py -d -p " + configpath
+        output = commands.getoutput(cmd)
+
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy seldon <<<<<<<<<<<<<<<<<<<<<<<\r\n")
+        cmd = "cd seldon && sh start.sh"
         output = commands.getoutput(cmd)
         print(output)
 
