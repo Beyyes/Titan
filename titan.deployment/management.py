@@ -42,7 +42,7 @@ class Management:
         cmd = "cd ../titan.deployment/kubernetes/ && sudo python deploy.py -a reset"
         output = commands.getoutput(cmd)
         print(output)
-        cmd = "cd kubernetes/script && sh reset_k8s.sh"
+	cmd = "cd kubernetes/script && sh reset_k8s.sh"
         output = commands.getoutput(cmd)
         print(output)
 
