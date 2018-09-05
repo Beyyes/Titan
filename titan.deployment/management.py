@@ -90,6 +90,7 @@ class Management:
         output = commands.getoutput(cmd)
         print(output)
 
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> clean seldon services <<<<<<<<<<<<<<<<<<<<<<<\r\n")
         cmd = "cd seldon && sh cleanup.sh"
         output = commands.getoutput(cmd)
         print(output)
