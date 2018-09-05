@@ -38,6 +38,7 @@ spec:
           initialDelaySeconds: 30
           timeoutSeconds: 30
       nodeSelector:
+        k8s-master: "true"
       tolerations:
       - key: "CriticalAddonsOnly"
         operator: "Exists"

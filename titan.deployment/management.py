@@ -29,9 +29,6 @@ class Management:
         # deploy k8s dashboard
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<\r\n")
         cmd = "cd kubernetes/dashboard && sh create_k8s_dashboard.sh"
-              # "kubectl create -f dashboard-rbac.yaml && " \
-              # "kubectl create -f dashboard-controller.yaml && " \
-              # "kubectl create -f dashboard-service.yaml"
         output = commands.getoutput(cmd)
         print(output)
         print ("You can access k8s dashboard by port 30280\r\n")
