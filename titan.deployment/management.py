@@ -119,6 +119,7 @@ class Management:
         cmd = "sudo systemctl stop airflow-webserver &&" \
               "sudo systemctl stop airflow-scheduler"
         execute_shell(cmd, "Meeing errors in stop airflow!")
+        print("\r\nYou can access airflow web by master-ip:18880!\r\n")
 
     # a parameter of port is needed, port 8000 may be conflict with others
     def ui_deploy(self):
