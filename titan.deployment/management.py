@@ -12,10 +12,6 @@ class Management:
     def __init__(self):
         return
 
-    def kubeadm_install(self):
-        # install kubeadm
-        return
-
     def k8s_deploy(self):
         # deploy k8s cluster
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s cluster using kubeadm, this may take a few minutes <<<<<<<<<<<<<<<<<<<<<<<\r\n")
@@ -114,9 +110,6 @@ class Management:
               "sudo apt-get -y install software-properties-common && " \
               "sudo apt-get -y install gcc make build-essential libssl-dev libffi-dev python-dev"
         commands.getoutput(cmd)
-        #path = os.getcwd()
-        #cmd = "export AIRFLOW_HOME=" + path
-        #commands.getoutput(cmd)
 
         print("\r\n >>>>>> Installing airflow using source code")
         cmd = "cd ../titan.workflow &&" \
@@ -146,9 +139,8 @@ class Management:
         print(commands.getoutput("sudo systemctl start airflow-scheduler"))
 
     def airflow_clean(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall airflow <<<<<<<<<<<<<<<<<<<<<<<")
+        print(log("Uninstall airflow"))
         print(">>>>>> remove ~/airflow and systemctl stop airflow-webserver and airflow-scheduler")
-
         cmd = "rm -rf ~/airflow &&" \
               "sudo systemctl stop airflow-webserver &&" \
               "sudo systemctl stop airflow-scheduler"
@@ -157,16 +149,13 @@ class Management:
 
     # a parameter of port is needed, port 8000 may be conflict with others
     def ui_deploy(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI, this may take a few minutes <<<<<<<<<<<<<<<<<<<<<<<")
+        print(log("deploy Titan UI, this may take a few minutes"))
         cmd = "cd ../titan.ui/ && sudo sh start.sh"
-        #output = commands.getoutput(cmd)
         execute_shell(cmd, "unable to stop titan ui")
-        #print(output)
         print("\r\nYou can access Titan UI by: master-ip:8000")
 
     def ui_clean(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> stop Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
-
+        print(log("stop Titan UI"))
         cmd = "sudo lsof -i:8000 | awk '{print $2}'"
         pids = commands.getoutput(cmd)
         print("Kill Titan UI process\r\n")
@@ -186,24 +175,20 @@ class Management:
     def add_node(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> add new node <<<<<<<<<<<<<<<<<<<<<<<")
 
-
         token = commands.getoutput("sudo kubeadm token create")
         hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
                                   "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
 
-
-        print("Kill Titan UI process\r\n")
-
         print("\r\n add new node successfully!")
-
-    def log(self, log):
-        return ("\r\n>>>>>>>>>>>>>>>>>>>>>>> {0} <<<<<<<<<<<<<<<<<<<<<<<\r\n").format(log)
 
     def all_deploy(self):
         print('all-deploy')
         self.k8s_deploy()
         self.airflow_deploy()
         self.ui_deploy()
+
+def log(log):
+    return ("\r\n>>>>>>>>>>>>>>>>>>>>>>> {0} <<<<<<<<<<<<<<<<<<<<<<<\r\n").format(log)
 
 def execute_shell(shell_cmd, error_msg):
     try:
