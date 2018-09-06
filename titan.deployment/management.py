@@ -129,9 +129,7 @@ class Management:
               "5) create dags folder in $HOME/airflow\r\n")
 
     def airflow_start(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, create airflow database in mysql,"
-              "make sure you have set the Executor and MySQL auth to airflow.cfg, and create Dags file"
-              " in ~/airflow/dags <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, make sure you have done the prerequisites in airflow-deploy <<<<<<<<<<<<<<<<<<<<<<<")
 
         # print(commands.getoutput("sudo service mysql restart"))
         # print(commands.getoutput("sudo service mysql restart"))
@@ -146,8 +144,7 @@ class Management:
         print(commands.getoutput("sudo apt-get install libmysqlclient-dev -y") + "\r\n")
         print(commands.getoutput("sudo pip install mysqlclient") + "\r\n")
 
-        print(commands.getoutput("airflow && cd ~/airflow"))
-        print(commands.getoutput("mkdir dags"))
+        print(commands.getoutput("cd ~/airflow"))
         print(commands.getoutput("sudo mkdir -p /usr/lib/systemd/system"))
         print(commands.getoutput("sudo cp airflow/airflow-webserver.service /usr/lib/systemd/system"))
         print(commands.getoutput("sudo cp airflow/airflow-scheduler.service /usr/lib/systemd/system"))
