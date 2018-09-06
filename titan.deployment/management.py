@@ -33,7 +33,7 @@ class Management:
         print(output)
         print ("You can access k8s dashboard by port 30280\r\n")
 
-    def k8s_reset(self):
+    def k8s_clean(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall k8s cluster <<<<<<<<<<<<<<<<<<<<<<<\r\n")
 
         cmd = "cd ../titan.deployment/kubernetes/ && sudo python deploy.py -a reset"
@@ -236,7 +236,7 @@ if __name__ == '__main__':
     if args.action == 'k8s-deploy':
         management.k8s_deploy()
     elif args.action == 'k8s-clean':
-        management.k8s_reset()
+        management.k8s_clean()
     elif args.action == 'k8s-dashboard':
         management.k8s_dashboard_deploy()
     elif args.action == 'pai-deploy':
