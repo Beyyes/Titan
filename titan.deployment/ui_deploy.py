@@ -80,7 +80,8 @@ def copy_js():
     wfile = open("ui/output/Kubernetes.js", "w+")
     wfile.write(new_content)
 
-    cmd = "cp ui/output/* ../titan.ui/src/routes/Dashboard/"
+
+    cmd = "mkdir -p ../titan.ui/src/routes/Dashboard/ && cp ui/output/* ../titan.ui/src/routes/Dashboard/"
     commands.getoutput(cmd)
 
 if __name__ == '__main__':
