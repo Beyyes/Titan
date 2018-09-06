@@ -131,15 +131,6 @@ class Management:
     def airflow_start(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, make sure you have done the prerequisites in airflow-deploy <<<<<<<<<<<<<<<<<<<<<<<")
 
-        # print(commands.getoutput("sudo service mysql restart"))
-        # print(commands.getoutput("sudo service mysql restart"))
-        # cmd = "sudo pip install kubernetes && " \
-        #       "sudo apt-get update && " \
-        #       "sudo service mysql restart && " \
-        #       "sudo apt-get install libmysqlclient-dev && " \
-        #       "sudo pip install mysqlclient"
-        # output = commands.getoutput(cmd)
-        # print(output)
         print(commands.getoutput("sudo service mysql restart") + "\r\n")
         print(commands.getoutput("sudo apt-get install libmysqlclient-dev -y") + "\r\n")
         print(commands.getoutput("sudo pip install mysqlclient") + "\r\n")
@@ -150,20 +141,11 @@ class Management:
         print(commands.getoutput("sudo cp airflow/airflow-scheduler.service /usr/lib/systemd/system"))
         print(commands.getoutput("sudo systemctl start airflow-webserver"))
         print(commands.getoutput("sudo systemctl start airflow-scheduler"))
-        # cmd = "airflow && cd ~/airflow && " \
-        #       "mkdir dags && " \
-        #       "sudo mkdir -p /usr/lib/systemd/system && " \
-        #       "sudo cp airflow/airflow-webserver.service /usr/lib/systemd/system  && " \
-        #       "sudo cp airflow/airflow-scheduler.service /usr/lib/systemd/system && " \
-        #       "sudo systemctl start airflow-webserver && " \
-        #       "sudo systemctl start airflow-scheduler"
-        # output = commands.getoutput(cmd)
-        # print(output)
 
     def airflow_clean(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall airflow <<<<<<<<<<<<<<<<<<<<<<<")
-
         print(">>>>>> remove ~/airflow and systemctl stop airflow-webserver and airflow-scheduler")
+
         cmd = "rm -rf ~/airflow &&" \
               "sudo systemctl stop airflow-webserver &&" \
               "sudo systemctl stop airflow-scheduler"
@@ -173,8 +155,7 @@ class Management:
     # a parameter of port is needed, port 8000 may be conflict with others
     def ui_deploy(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "cd ../titan.ui/ && " \
-              "sh start.sh"
+        cmd = "cd ../titan.ui/ && sh start.sh"
         # output = commands.getoutput(cmd)
         # print(output)
         #
