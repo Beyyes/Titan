@@ -89,8 +89,8 @@ echo "apply sklearn_iris_deployment\n"
 
 # get token
 sudo apt-get install jq
-SERVER=$(kubectl get  svc/seldon-apiserver -n seldon -o jsonpath='{.spec.clusterIP}')
-TOKEN=`curl -s -H "Accept: application/json" oauth-key:oauth-secret@$SERVER:8080/oauth/token -d grant_type=client_credentials | jq -r '.access_token'`
+#SERVER=$(kubectl get  svc/seldon-apiserver -n seldon -o jsonpath='{.spec.clusterIP}')
+#TOKEN=`curl -s -H "Accept: application/json" oauth-key:oauth-secret@$SERVER:8080/oauth/token -d grant_type=client_credentials | jq -r '.access_token'`
 
 # send request
-curl -s -H "Content-Type:application/json" -H "Accept: application/json" -H "Authorization: Bearer $TOKEN" $SERVER:8080/api/v0.1/predictions -d '{"meta":{},"data":{"names":["sepal lengt (cm)","sepal width (cm)", "petal length (cm)","petal width (cm)"],"ndarray":[[5.1,3.5,1.4,0.2]]}}'
+#curl -s -H "Content-Type:application/json" -H "Accept: application/json" -H "Authorization: Bearer $TOKEN" $SERVER:8080/api/v0.1/predictions -d '{"meta":{},"data":{"names":["sepal lengt (cm)","sepal width (cm)", "petal length (cm)","petal width (cm)"],"ndarray":[[5.1,3.5,1.4,0.2]]}}'
