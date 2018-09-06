@@ -126,17 +126,18 @@ class Management:
 
     def airflow_start(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, make sure you have done the prerequisites in airflow-deploy <<<<<<<<<<<<<<<<<<<<<<<")
-
-        print(commands.getoutput("sudo service mysql restart") + "\r\n")
-        print(commands.getoutput("sudo apt-get install libmysqlclient-dev -y") + "\r\n")
-        print(commands.getoutput("sudo pip install mysqlclient") + "\r\n")
-
-        print(commands.getoutput("cd ~/airflow"))
-        print(commands.getoutput("sudo mkdir -p /usr/lib/systemd/system"))
-        print(commands.getoutput("sudo cp airflow/airflow-webserver.service /usr/lib/systemd/system"))
-        print(commands.getoutput("sudo cp airflow/airflow-scheduler.service /usr/lib/systemd/system"))
-        print(commands.getoutput("sudo systemctl start airflow-webserver"))
-        print(commands.getoutput("sudo systemctl start airflow-scheduler"))
+        cmd = "cd airflow && sh start.sh"
+        execute_shell(cmd, "Starting airflow meets error!")
+        # print(commands.getoutput("sudo service mysql restart") + "\r\n")
+        # print(commands.getoutput("sudo apt-get install libmysqlclient-dev -y") + "\r\n")
+        # print(commands.getoutput("sudo pip install mysqlclient") + "\r\n")
+        #
+        # print(commands.getoutput("cd ~/airflow"))
+        # print(commands.getoutput("sudo mkdir -p /usr/lib/systemd/system"))
+        # print(commands.getoutput("sudo cp airflow/airflow-webserver.service /usr/lib/systemd/system"))
+        # print(commands.getoutput("sudo cp airflow/airflow-scheduler.service /usr/lib/systemd/system"))
+        # print(commands.getoutput("sudo systemctl start airflow-webserver"))
+        # print(commands.getoutput("sudo systemctl start airflow-scheduler"))
 
     def airflow_clean(self):
         print(log("Uninstall airflow"))
