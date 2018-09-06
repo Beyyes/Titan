@@ -125,7 +125,7 @@ class Management:
               "5) create dags folder in $HOME/airflow\r\n")
 
     def airflow_start(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, make sure you have done the prerequisites in airflow-deploy <<<<<<<<<<<<<<<<<<<<<<<")
+        print(log("start airflow, make sure you have done the prerequisites in airflow-deploy"))
         cmd = "cd airflow && sh start.sh"
         execute_shell(cmd, "Starting airflow meets error!")
         # print(commands.getoutput("sudo service mysql restart") + "\r\n")
