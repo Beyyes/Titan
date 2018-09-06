@@ -41,10 +41,10 @@ done
 
 if [ -n "$(kubectl get po -n kube-system | grep ^tiller-deploy)" ]; then
     echo "helm reset..."
-    helm delete seldon-core-analytics --purge
-    helm delete seldon-core --purge
-    helm delete seldon-core-crd --purge
-    helm reset --force
+    sudo helm delete seldon-core-analytics --purge
+    sudo helm delete seldon-core --purge
+    sudo helm delete seldon-core-crd --purge
+    sudo helm reset --force
     echo "helm reset done"
 
     sleep 5

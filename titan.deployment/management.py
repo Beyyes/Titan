@@ -73,6 +73,7 @@ class Management:
         cmd = "sudo rm -rf pai && " \
               "git clone https://github.com/Beyyes/pai && " \
               "cd pai/pai-management && " \
+              "sudo pip install kubernetes &&" \
               "git checkout deploy_for_titan_prod && " \
               "sudo python deploy.py -d -p " + configpath
         output = commands.getoutput(cmd)
@@ -105,7 +106,7 @@ class Management:
               "tar -xzvf pip-10.0.1.tar.gz && " \
               "cd pip-10.0.1 && " \
               "sudo python setup.py install && " \
-              "pip install setuptools --user --upgrade && " \
+              "sudo pip install setuptools --user --upgrade && " \
               "sudo apt-get -y install python-software-properties && " \
               "sudo apt-get -y install software-properties-common && " \
               "sudo apt-get -y install gcc make build-essential libssl-dev libffi-dev python-dev"
@@ -123,7 +124,6 @@ class Management:
         print(commands.getoutput("sudo apt-get install mysql-server -y") + "\r\n")
         print(commands.getoutput("sudo service mysql restart") + "\r\n")
         print(commands.getoutput("sudo apt-get install libmysqlclient-dev -y") + "\r\n")
-        print(commands.getoutput("sudo pip install kubernetes") + "\r\n")
         print(commands.getoutput("sudo pip install mysqlclient") + "\r\n")
 
         print("\r\n >>>>>> AIRFLOW_HOME has been set to $HOME/airflow, you need"
@@ -187,7 +187,7 @@ class Management:
     def ui_clean(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> stop Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
 
-        cmd = "lsof -i:8000 | awk '{print $2}'"
+        cmd = "sudo lsof -i:8000 | awk '{print $2}'"
         pids = commands.getoutput(cmd)
         print("Kill Titan UI process\r\n")
         pids = pids.split("\n")

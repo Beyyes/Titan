@@ -25,6 +25,7 @@
 
 #kubectl label nodes spark-master sparkrole-
 
+
 kubectl delete -f sklearn_iris_deployment.json -n seldon
 kubectl delete svc --all -n seldon
 kubectl delete deploy --all -n seldon
