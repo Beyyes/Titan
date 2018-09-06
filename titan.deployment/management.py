@@ -155,7 +155,7 @@ class Management:
     # a parameter of port is needed, port 8000 may be conflict with others
     def ui_deploy(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
-        cmd = "cd ../titan.ui/ && sh start.sh"
+        cmd = "cd ../titan.ui/ && sudo sh start.sh"
         # output = commands.getoutput(cmd)
         # print(output)
         #
