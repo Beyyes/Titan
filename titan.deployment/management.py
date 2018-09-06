@@ -140,12 +140,10 @@ class Management:
 
     def airflow_clean(self):
         print(log("Uninstall airflow"))
-        print(">>>>>> remove ~/airflow and systemctl stop airflow-webserver and airflow-scheduler")
-        cmd = "rm -rf ~/airflow &&" \
-              "sudo systemctl stop airflow-webserver &&" \
+        print(log("systemctl stop airflow-webserver and airflow-scheduler, remove ~/airflow is optional"))
+        cmd = "sudo systemctl stop airflow-webserver &&" \
               "sudo systemctl stop airflow-scheduler"
-        output = commands.getoutput(cmd)
-        print(output)
+        execute_shell(cmd, "Meeing errors in stop airflow!")
 
     # a parameter of port is needed, port 8000 may be conflict with others
     def ui_deploy(self):
