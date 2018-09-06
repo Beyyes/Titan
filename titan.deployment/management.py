@@ -4,6 +4,9 @@ import yaml
 import os
 import logging
 import logging.config
+import subprocess
+
+logger = logging.getLogger(__name__)
 
 class Management:
     def __init__(self):
@@ -154,14 +157,11 @@ class Management:
 
     # a parameter of port is needed, port 8000 may be conflict with others
     def ui_deploy(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI <<<<<<<<<<<<<<<<<<<<<<<")
+        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI, this may take a few minutes <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ../titan.ui/ && sudo sh start.sh"
-        # output = commands.getoutput(cmd)
-        # print(output)
-        #
-        # cmd = '"nohup npm start &"'
         output = commands.getoutput(cmd)
-        print(output)
+        #execute_shell(cmd, "unable to stop titan ui")
+        #print(output)
         print("\r\nYou can access Titan UI by: master-ip:8000")
 
     def ui_clean(self):
@@ -190,7 +190,7 @@ class Management:
         token = commands.getoutput("sudo kubeadm token create")
         hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
                                   "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
-        # bjag6l.tgr33e1wxkieoop1
+
 
         print("Kill Titan UI process\r\n")
 
@@ -205,6 +205,11 @@ class Management:
         self.airflow_deploy()
         self.ui_deploy()
 
+def execute_shell(self, shell_cmd, error_msg):
+    try:
+        subprocess.check_call(shell_cmd, shell=True)
+    except subprocess.CalledProcessError:
+        logger.error(error_msg)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
