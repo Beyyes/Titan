@@ -79,6 +79,8 @@ def copy_js():
     new_content = content.replace("DEFINE-MASTER-IP", master)
     wfile = open("ui/output/Kubernetes.js", "w+")
     wfile.write(new_content)
+    file.close()
+    wfile.close()
 
 
     cmd = "mkdir -p ../titan.ui/src/routes/Dashboard/ && cp ui/output/* ../titan.ui/src/routes/Dashboard/"
