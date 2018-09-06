@@ -120,14 +120,13 @@ class Management:
               "sudo python setup.py install"
         print(commands.getoutput(cmd))
 
-        print("\r\n >>>>>> Installing mysql-server and mysql-client")
-        print(commands.getoutput("sudo apt-get install mysql-server -y") + "\r\n")
-        print(commands.getoutput("sudo service mysql restart") + "\r\n")
-        print(commands.getoutput("sudo apt-get install libmysqlclient-dev -y") + "\r\n")
-        print(commands.getoutput("sudo pip install mysqlclient") + "\r\n")
-
-        print("\r\n >>>>>> AIRFLOW_HOME has been set to $HOME/airflow, you need"
-              "input the username and password and set LocalExecutor to $HOME/airflow/airflow.cfg !! \r\n")
+        #print(commands.getoutput("sudo apt-get install mysql-server -y") + "\r\n")
+        print("\r\n >>>>>> AIRFLOW_HOME has been set to $HOME/airflow, you need do these three things:\r\n"
+              "1) run 'sudo apt-get install mysql-server -y' to install mysql, set the password\r\n"
+              "2) create database airflow in mysql\r\n"
+              "3) replace `sql_alchemy_conn = mysql://root:password@localhost/airflow` to $HOME/airflow/airflow.cfg\r\n"
+              "4) set LocalExecutor to $HOME/airflow/airflow.cfg\r\n"
+              "5) create dags folder in $HOME/airflow\r\n")
 
     def airflow_start(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, create airflow database in mysql,"
@@ -143,6 +142,9 @@ class Management:
         #       "sudo pip install mysqlclient"
         # output = commands.getoutput(cmd)
         # print(output)
+        print(commands.getoutput("sudo service mysql restart") + "\r\n")
+        print(commands.getoutput("sudo apt-get install libmysqlclient-dev -y") + "\r\n")
+        print(commands.getoutput("sudo pip install mysqlclient") + "\r\n")
 
         print(commands.getoutput("airflow && cd ~/airflow"))
         print(commands.getoutput("mkdir dags"))
