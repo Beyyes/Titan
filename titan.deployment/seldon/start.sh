@@ -88,7 +88,7 @@ sudo kubectl apply -f sklearn_iris_deployment.json -n seldon
 echo "apply sklearn_iris_deployment\n"
 
 # get token
-sudo apt-get install jq
+sudo apt-get install jq -y
 #SERVER=$(kubectl get  svc/seldon-apiserver -n seldon -o jsonpath='{.spec.clusterIP}')
 #TOKEN=`curl -s -H "Accept: application/json" oauth-key:oauth-secret@$SERVER:8080/oauth/token -d grant_type=client_credentials | jq -r '.access_token'`
 

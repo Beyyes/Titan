@@ -80,7 +80,7 @@ class Management:
         print(output)
 
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy seldon <<<<<<<<<<<<<<<<<<<<<<<\r\n")
-        cmd = "cd seldon && sh start.sh"
+        cmd = "cd seldon && sudo sh start.sh"
         output = commands.getoutput(cmd)
         print(output)
 
@@ -92,7 +92,7 @@ class Management:
         print(output)
 
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> clean seldon services <<<<<<<<<<<<<<<<<<<<<<<\r\n")
-        cmd = "cd seldon && sh cleanup.sh"
+        cmd = "cd seldon && sudo sh cleanup.sh"
         output = commands.getoutput(cmd)
         print(output)
 
