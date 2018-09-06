@@ -7,7 +7,8 @@ curl -LO https://files.pythonhosted.org/packages/ae/e8/2340d46ecadb1692a1e455f13
 tar -xzvf pip-10.0.1.tar.gz
 cd pip-10.0.1
 sudo python setup.py install
-pip install setuptools --user --upgrade
+sudo pip install docutils
+sudo pip install setuptools --user --upgrade
 
 
 sudo apt-get -y install python-software-properties && \
@@ -16,6 +17,7 @@ sudo apt-get -y install gcc make build-essential libssl-dev libffi-dev python-de
 
 
 # exe dir : titan.workflow
+cd titan.workflow
 sudo python setup.py install
 # need this command to create airflow home
 airflow

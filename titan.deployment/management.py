@@ -121,10 +121,10 @@ class Management:
 
         print("\r\n >>>>>> Installing mysql-server and mysql-client")
         print(commands.getoutput("sudo apt-get install mysql-server -y") + "\r\n")
-        print(commands.getoutput("sudo service mysql restart") + "\r\n" )
+        print(commands.getoutput("sudo service mysql restart") + "\r\n")
         print(commands.getoutput("sudo apt-get install libmysqlclient-dev -y") + "\r\n")
-        print(commands.getoutput("sudo pip install kubernetes") + "\r\n" )
-        print(commands.getoutput("sudo pip install mysqlclient") + "\r\n" )
+        print(commands.getoutput("sudo pip install kubernetes") + "\r\n")
+        print(commands.getoutput("sudo pip install mysqlclient") + "\r\n")
 
         print("\r\n >>>>>> AIRFLOW_HOME has been set to $HOME/airflow, you need"
               "input the username and password and set LocalExecutor to $HOME/airflow/airflow.cfg !! \r\n")
@@ -216,6 +216,9 @@ class Management:
         print("Kill Titan UI process\r\n")
 
         print("\r\n add new node successfully!")
+
+    def log(self, log):
+        return ("\r\n>>>>>>>>>>>>>>>>>>>>>>> {0} <<<<<<<<<<<<<<<<<<<<<<<\r\n").format(log)
 
     def all_deploy(self):
         print('all-deploy')
