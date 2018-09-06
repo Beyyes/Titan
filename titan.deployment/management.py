@@ -205,7 +205,7 @@ class Management:
         self.airflow_deploy()
         self.ui_deploy()
 
-def execute_shell(self, shell_cmd, error_msg):
+def execute_shell(shell_cmd, error_msg):
     try:
         subprocess.check_call(shell_cmd, shell=True)
     except subprocess.CalledProcessError:
