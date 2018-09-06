@@ -13,45 +13,38 @@ class Management:
         return
 
     def k8s_deploy(self):
-        # deploy k8s cluster
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s cluster using kubeadm, this may take a few minutes <<<<<<<<<<<<<<<<<<<<<<<\r\n")
-
+        print(log("deploy k8s cluster using kubeadm, this may take a few minutes"))
         cmd = "cd ../titan.deployment/kubernetes/ && " \
               "sudo pip install paramiko && " \
               "sudo pip install pyyaml"
-        commands.getoutput(cmd)
+        execute_shell(cmd, "Pip installing paramiko, pyyaml meets error!")
         cmd = "cd ../titan.deployment/kubernetes/ &&  " \
               "sudo python deploy.py -a deploy"
-        output = commands.getoutput(cmd)
-        print(output)
+        execute_shell(cmd, "Deploy k8s cluster meets error!")
 
         # deploy k8s dashboard
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<\r\n")
+        print(log("Deploy k8s dashboard"))
         cmd = "cd kubernetes/dashboard && sh create_k8s_dashboard.sh"
-        output = commands.getoutput(cmd)
-        print(output)
+        execute_shell(cmd, "Deploy k8s dashboard meets error!")
         print ("You can access k8s dashboard by port 30280\r\n")
 
     def k8s_clean(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> uninstall k8s cluster <<<<<<<<<<<<<<<<<<<<<<<\r\n")
-
+        print(log("Uninstall k8s cluster"))
         cmd = "cd ../titan.deployment/kubernetes/ && sudo python deploy.py -a reset"
-        output = commands.getoutput(cmd)
-        print(output)
+        execute_shell(cmd, "Clean k8s cluster meets error!")
         cmd = "cd kubernetes/script && sh reset_k8s.sh"
-        output = commands.getoutput(cmd)
-        print(output)
+        execute_shell(cmd, "Clean k8s environment meets error!")
 
     # maybe we also need a k8s service/deployment cleaning script
     def k8s_dashboard_deploy(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy k8s dashboard <<<<<<<<<<<<<<<<<<<<<<<\r\n")
+        print(log("Deploy k8s dashboard"))
         cmd = "cd kubernetes/dashboard && sh create_k8s_dashboard.sh"
         output = commands.getoutput(cmd)
         print(output)
         print ("\r\nYou can access k8s dashboard by port 30280")
 
     def pai_deploy(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<\r\n")
+        print(log("deploy PAI service, this may take some minutes"))
         # with open("config/cluster-config.yaml", "r") as k8s_cluster_file:
         #     yaml_obj = yaml.load(k8s_cluster_file.read())
         #
@@ -68,37 +61,30 @@ class Management:
 
         # a cluster-configuration is needed
         configpath = os.getcwd() + "/config/service-config"
-
         cmd = "sudo rm -rf pai && " \
               "git clone https://github.com/Beyyes/pai && " \
               "cd pai/pai-management && " \
               "sudo pip install kubernetes &&" \
               "git checkout deploy_for_titan_prod && " \
               "sudo python deploy.py -d -p " + configpath
-        output = commands.getoutput(cmd)
-        print(output)
+        execute_shell(cmd, "Deploy pai meets error!")
 
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy seldon <<<<<<<<<<<<<<<<<<<<<<<\r\n")
+        print(log("deploy seldon"))
         cmd = "cd seldon && sudo sh start.sh"
-        output = commands.getoutput(cmd)
-        print(output)
+        execute_shell(cmd, "Setup seldon meets error!")
 
     def pai_clean(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> clean PAI service, this may take some minutes <<<<<<<<<<<<<<<<<<<<<<<\r\n")
-
+        print(log("clean PAI service, this may take some minutes"))
         cmd = "cd pai/pai-management && git checkout deploy_for_titan_prod && sudo python cleanup-service.py"
-        output = commands.getoutput(cmd)
-        print(output)
+        execute_shell(cmd, "Clean PAI service meets error!")
 
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> clean seldon services <<<<<<<<<<<<<<<<<<<<<<<\r\n")
+        print(log("clean seldon services"))
         cmd = "cd seldon && sudo sh cleanup.sh"
-        output = commands.getoutput(cmd)
-        print(output)
+        execute_shell(cmd, "Clean seldon meets error!")
 
     def airflow_deploy(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy airflow <<<<<<<<<<<<<<<<<<<<<<<\r\n")
-
-        print("\r\n >>>>>> Installing pip, python-software-properties, software-properties-common, gcc")
+        print(log("deploy airflow"))
+        print(log("Installing pip, python-software-properties, software-properties-common, gcc, pip"))
         cmd = "cd ../titan.workflow && " \
               "sudo apt-get install python-setuptools -y && " \
               "curl -LO https://files.pythonhosted.org/packages/ae/e8/2340d46ecadb1692a1e455f13f75e596d4eab3d11a57446f08259dee8f02/pip-10.0.1.tar.gz &&" \
@@ -111,12 +97,10 @@ class Management:
               "sudo apt-get -y install gcc make build-essential libssl-dev libffi-dev python-dev"
         commands.getoutput(cmd)
 
-        print("\r\n >>>>>> Installing airflow using source code")
-        cmd = "cd ../titan.workflow &&" \
-              "sudo python setup.py install"
-        print(commands.getoutput(cmd))
+        print(log("Installing airflow using source code"))
+        cmd = "cd ../titan.workflow && sudo python setup.py install"
+        execute_shell(cmd, "Installing airflow using source code meets error!")
 
-        #print(commands.getoutput("sudo apt-get install mysql-server -y") + "\r\n")
         print("\r\n >>>>>> AIRFLOW_HOME has been set to $HOME/airflow, you need do these three things:\r\n"
               "1) run 'sudo apt-get install mysql-server -y' to install mysql, set the password\r\n"
               "2) create database airflow in mysql\r\n"
@@ -128,16 +112,6 @@ class Management:
         print(log("start airflow, make sure you have done the prerequisites in airflow-deploy"))
         cmd = "cd airflow && sh start.sh"
         execute_shell(cmd, "Starting airflow meets error!")
-        # print(commands.getoutput("sudo service mysql restart") + "\r\n")
-        # print(commands.getoutput("sudo apt-get install libmysqlclient-dev -y") + "\r\n")
-        # print(commands.getoutput("sudo pip install mysqlclient") + "\r\n")
-        #
-        # print(commands.getoutput("cd ~/airflow"))
-        # print(commands.getoutput("sudo mkdir -p /usr/lib/systemd/system"))
-        # print(commands.getoutput("sudo cp airflow/airflow-webserver.service /usr/lib/systemd/system"))
-        # print(commands.getoutput("sudo cp airflow/airflow-scheduler.service /usr/lib/systemd/system"))
-        # print(commands.getoutput("sudo systemctl start airflow-webserver"))
-        # print(commands.getoutput("sudo systemctl start airflow-scheduler"))
 
     def airflow_clean(self):
         print(log("Uninstall airflow"))
@@ -172,7 +146,7 @@ class Management:
         print("\r\nKill Titan UI process successfully!")
 
     def add_node(self):
-        print("\r\n>>>>>>>>>>>>>>>>>>>>>>> add new node <<<<<<<<<<<<<<<<<<<<<<<")
+        print(log("add new node"))
 
         token = commands.getoutput("sudo kubeadm token create")
         hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
