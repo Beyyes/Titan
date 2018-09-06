@@ -159,8 +159,8 @@ class Management:
     def ui_deploy(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> deploy Titan UI, this may take a few minutes <<<<<<<<<<<<<<<<<<<<<<<")
         cmd = "cd ../titan.ui/ && sudo sh start.sh"
-        output = commands.getoutput(cmd)
-        #execute_shell(cmd, "unable to stop titan ui")
+        #output = commands.getoutput(cmd)
+        execute_shell(cmd, "unable to stop titan ui")
         #print(output)
         print("\r\nYou can access Titan UI by: master-ip:8000")
 
@@ -176,7 +176,7 @@ class Management:
         count = 0
         for pid in pids:
             if count > 0:
-                cmd = "kill " + pid
+                cmd = "sudo kill -9 " + pid
                 print(cmd)
                 commands.getoutput(cmd)
             count += 1
