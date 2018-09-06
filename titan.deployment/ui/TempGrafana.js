@@ -5,7 +5,7 @@ export default class GrafanaWrapper extends Component {
   render() {
     return (
       <Fragment>
-        <iframe src="http://spark-master:3000/" width="100%" height="100%" frameBorder="0" scrolling="no"></iframe>
+        <iframe src="http://DEFINE-MASTER-IP:3000/" width="100%" height="100%" frameBorder="0" scrolling="no"></iframe>
       </Fragment>
     )
   }

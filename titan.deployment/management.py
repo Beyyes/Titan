@@ -5,6 +5,7 @@ import os
 import logging
 import logging.config
 import subprocess
+import ui_deploy
 
 logger = logging.getLogger(__name__)
 
@@ -124,6 +125,7 @@ class Management:
     # a parameter of port is needed, port 8000 may be conflict with others
     def ui_deploy(self):
         print(log("deploy Titan UI, this may take a few minutes"))
+        ui_deploy.copy_js()
         cmd = "cd ../titan.ui/ && sudo sh start.sh"
         execute_shell(cmd, "unable to stop titan ui")
         print("\r\nYou can access Titan UI by: master-ip:8000")
