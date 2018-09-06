@@ -129,7 +129,6 @@ class Management:
         print("\r\n >>>>>> AIRFLOW_HOME has been set to $HOME/airflow, you need"
               "input the username and password and set LocalExecutor to $HOME/airflow/airflow.cfg !! \r\n")
 
-
     def airflow_start(self):
         print("\r\n>>>>>>>>>>>>>>>>>>>>>>> start airflow, before start, create airflow database in mysql,"
               "make sure you have set the Executor and MySQL auth to airflow.cfg, and create Dags file"

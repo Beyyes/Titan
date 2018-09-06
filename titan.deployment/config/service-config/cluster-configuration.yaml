@@ -51,8 +51,8 @@ machine-sku:
 
 machine-list:
 
-    - hostname: spark-slave2
-      hostip: 10.190.178.19 
+    - hostname: spark-slave1
+      hostip: 10.190.150.233
       machine-type: D8SV3
       etcdid: etcdid1
       #sshport: PORT (Optional)
@@ -64,8 +64,8 @@ machine-list:
       pai-master: "true"
 
 
-    - hostname: spark-slave3
-      hostip: 10.190.176.175
+    - hostname: spark-slave2
+      hostip: 10.190.178.19
       machine-type: NC24R
       #sshport: PORT (Optional)
       #username: username (Optional)
@@ -74,8 +74,8 @@ machine-list:
       pai-worker: "true"
 
 
-    - hostname: spark-slave4
-      hostip: 10.190.177.242
+    - hostname: spark-slave3
+      hostip:
       machine-type: NC24R
       #sshport: PORT (Optional)
       #username: username (Optional)
