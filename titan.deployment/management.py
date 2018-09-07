@@ -6,6 +6,7 @@ import logging
 import logging.config
 import subprocess
 import ui_deploy
+from ruamel import yaml
 
 logger = logging.getLogger(__name__)
 
@@ -170,9 +171,14 @@ class Management:
             # execute_shell(label_nodes, "Labels new node meets error!")
 
             yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
+            yaml_config = yaml.load(yaml_config)
+            print(yaml_config)
+            print(yaml_config["data"])
             content = yaml_config["data"]["host-configuration.yaml"]
-            for h in content:
-                print(h)
+            new_node = "{'{0}':'{'ip':{1}, 'dataFolder':'', 'machinetype':'gpu', 'hdfsrole':'worker', 'yarnrole':'worker'}'}".format(hostname, hostip)
+            print(new_node)
+            content.append(new_node)
+            print(content)
             # with open("host-configuration.yaml", "w+") as f:
             #     f.write(host_config)
             # f.close()
