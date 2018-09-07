@@ -6,7 +6,7 @@ import logging
 import logging.config
 import subprocess
 import ui_deploy
-from ruamel import yaml
+#from ruamel import yaml
 
 logger = logging.getLogger(__name__)
 
@@ -175,7 +175,7 @@ class Management:
             print(yaml_config)
             print(yaml_config["data"])
             content = yaml_config["data"]["host-configuration.yaml"]
-            content.append({hostname: [{'ip': hostip}, {'dataFolder': ''}, {'hdfsrole': 'worker'}, {'yarnrole':'worker'}]})
+            content[hostname] = {[{'ip': hostip}, {'dataFolder': ''}, {'hdfsrole': 'worker'}, {'yarnrole':'worker'}]}
             print(content)
             # with open("host-configuration.yaml", "w+") as f:
             #     f.write(host_config)
