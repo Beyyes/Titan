@@ -175,9 +175,7 @@ class Management:
             print(yaml_config)
             print(yaml_config["data"])
             content = yaml_config["data"]["host-configuration.yaml"]
-            new_node = "{'{0}':'{'ip':{1}, 'dataFolder':'', 'machinetype':'gpu', 'hdfsrole':'worker', 'yarnrole':'worker'}'}".format(hostname, hostip)
-            print(new_node)
-            content.append(new_node)
+            content.append({hostname: [{'ip': hostip}, {'dataFolder': ''}, {'hdfsrole': 'worker'}, {'yarnrole':'worker'}]})
             print(content)
             # with open("host-configuration.yaml", "w+") as f:
             #     f.write(host_config)
