@@ -153,7 +153,7 @@ class Management:
         with open(node_file, "r") as f:
             raw_config = yaml.load(f)
 
-        for node in raw_config['matchine-list']:
+        for node in raw_config['machine-list']:
             hostname = node['hostname']
             hostip = node['hostip']
             # token = commands.getoutput("sudo kubeadm token create")
