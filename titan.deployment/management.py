@@ -173,17 +173,17 @@ class Management:
             yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
             yaml_config = yaml.load(yaml_config)
             print(yaml_config)
-
+	    print(yaml_config["data"])
+	    print(yaml_config["data"]["host-configuration.yaml"])
             #content = yaml_config["data"]["host-configuration.yaml"]
             new_yaml_data_dict = {
-                hostname : {
                     'ip': hostip,
                     'dataFolder': '',
                     'hdfsrole': 'worker',
                     'yarnrole': 'worker'
-                }
             }
-            yaml_config["data"]["host-configuration.yaml"].update("host-configuration.yaml", new_yaml_data_dict)
+	    yaml_config["data"]["host-configuration.yaml"] = yaml_config["data"]["host-configuration.yaml"] + "!!!!!!!!!!!!!"
+	    #t += "\n spark-node"
             #content.extend(new_yaml_data_dict)
             #print(content)
             print(yaml_config)
