@@ -173,10 +173,18 @@ class Management:
             yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
             yaml_config = yaml.load(yaml_config)
             print(yaml_config)
-            print(yaml_config["data"])
             content = yaml_config["data"]["host-configuration.yaml"]
-            content[hostname] = {[{'ip': hostip}, {'dataFolder': ''}, {'hdfsrole': 'worker'}, {'yarnrole':'worker'}]}
+            new_yaml_data_dict = {
+                hostname : {
+                    'ip': hostip,
+                    'dataFolder': '',
+                    'hdfsrole': 'worker',
+                    'yarnrole': 'worker'
+                }
+            }
+            content.extend(new_yaml_data_dict)
             print(content)
+            print(yaml_config)
             # with open("host-configuration.yaml", "w+") as f:
             #     f.write(host_config)
             # f.close()
