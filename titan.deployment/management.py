@@ -172,7 +172,7 @@ class Management:
 
             yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
             yaml_config = yaml.load(yaml_config)
-            print(yaml_config + "\r\n")
+            print(yaml_config)
             # print(yaml_config["data"])
             # print(yaml_config["data"]["host-configuration.yaml"])
             #content = yaml_config["data"]["host-configuration.yaml"]
