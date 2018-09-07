@@ -148,14 +148,50 @@ class Management:
 
         print("\r\nKill Titan UI process successfully!")
 
-    def add_node(self):
-        print(log("add new node"))
+    def add_node(self, node_file):
+        print(log("Add new node"))
+        with open(node_file, "r") as f:
+            raw_config = yaml.load(f)
 
-        token = commands.getoutput("sudo kubeadm token create")
-        hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
-                                  "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
+        for node in raw_config['matchine-list']:
+            hostname = node['hostname']
+            hostip = node['hostip']
+            # token = commands.getoutput("sudo kubeadm token create")
+            # hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
+            #                           "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
+            # join_cmd = "kubeadm join {0}:6443 --token {1} " \
+            #            "--discovery-token-ca-cert-hash sha256:{2}".format(hostip, token, hash)
+            # execute_shell(join_cmd, "Join new node meets error!")
+            #
+            # label_nodes = "kubectl label nodes {0} machinetype=gpu && " \
+            #               "kubectl label nodes {1} node-exporter=true && " \
+            #               "kubectl label nodes {2} yarnrole=worker && " \
+            #               "kubectl label nodes {3} hdfsrole=worker".format(hostname, hostname, hostname, hostname)
+            # execute_shell(label_nodes, "Labels new node meets error!")
+
+            yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
+            content = yaml_config["data"]["host-configuration.yaml"]
+            for h in content:
+                print(h)
+            # with open("host-configuration.yaml", "w+") as f:
+            #     f.write(host_config)
+            # f.close()
+            #
+            # config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
+            # execute_shell(config_command, "Modify new node configmap meets error!")
 
         print("\r\n add new node successfully!")
+
+    def delete_node(self, node_file):
+        return
+
+    def test(self):
+        host_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
+        with open("host-configuration.yaml", "w+") as f:
+            f.write(host_config)
+        f.close()
+        config_shell = "kubectl delete configmap host-configuration_tmp && " \
+                       "kubectl create configmap host-configuration_tmp --from-file=host-configuration.yaml"
 
     def all_deploy(self):
         print('all-deploy')
@@ -176,6 +212,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--action', required=True, default=None,
                         help="action to execute. select one from 'k8s', 'ui', 'airflow' and 'all'")
+    parser.add_argument('-f', '--file', default=None, help="An yamlfile with the nodelist to maintain")
     args = parser.parse_args()
 
     management = Management()
@@ -200,7 +237,7 @@ if __name__ == '__main__':
     elif args.action == 'ui-clean':
         management.ui_clean()
     elif args.action == 'add-node':
-        management.add_node()
+        management.add_node(args.file)
     elif args.action == 'all':
         management.all_deploy()
     else:
