@@ -14,6 +14,7 @@ else
 fi
 
 swapoff --all
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 if curl --help > /dev/null 2>&1; then
     printInfo "curl has been installed"
 else

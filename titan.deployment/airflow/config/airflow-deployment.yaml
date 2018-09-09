@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+       k8s-app: airflow
+  template:
+    metadata:
+      labels:
+        k8s-app: airflow
+    spec:
+      nodeSelector:
+        airflow: "true"
+      containers:
+      - name: airflow
+        image: puckel/docker-airflow
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP

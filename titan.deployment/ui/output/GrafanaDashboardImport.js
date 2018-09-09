@@ -5,7 +5,7 @@ export default class GrafanaDashboardImportWrapper extends Component {
   render() {
     return (
       <Fragment>
-        <iframe src="http://localhost:3333/dashboard/import" width="100%" height="100%" frameBorder="0" scrolling="no"></iframe>
+        <iframe src="http://spark-slave1:3000/dashboard/import" width="100%" height="100%" frameBorder="0" scrolling="no"></iframe>
       </Fragment>
     )
   }

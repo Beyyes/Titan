@@ -6,7 +6,7 @@ import { Table, Icon, Button, InputNumber } from 'antd';
 
 function fetchData() {
   let res = null;
-  $.ajax('http://localhost:8088/ws/v1/cluster/apps', {
+  $.ajax('http://spark-slave1:8088/ws/v1/cluster/apps', {
     accepts: { json: 'application/json' },
     dataType: 'json',
     async: false,
@@ -61,7 +61,7 @@ export default class MetricsMonitorPage extends Component {
 
   handleClick = (e, appId) => {
     e.preventDefault();
-    this.url = `http://localhost:3333/dashboard/script/spark.js?app=${appId}&maxExecutorId=2&orgId=1&from=now-6h&to=now`;
+    this.url = `http://spark-slave1:3333/dashboard/script/spark.js?app=${appId}&maxExecutorId=2&orgId=1&from=now-6h&to=now`;
     if (this.setState) {
       this.setState({ isHome: false, url: this.url });
     }

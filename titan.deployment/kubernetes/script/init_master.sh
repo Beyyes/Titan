@@ -4,7 +4,8 @@ printInfo(){
     echo "[info] $1"
 }
 
-username="dladmin"
+username=$1
+echo username
 
 ./prepare_env.sh
 

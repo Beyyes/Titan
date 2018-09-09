@@ -1,0 +1,6 @@
+[Unit]
+Description=airflow-webserver
+
+[Service]
+ExecStart=/bin/bash -c "cd ~/airflow; airflow initdb; airflow webserver -p 18880"
+Restart=always

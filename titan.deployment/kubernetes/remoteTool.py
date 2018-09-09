@@ -17,10 +17,10 @@ class RemoteTool:
         output['out'] = ""
         output['err'] = ""
         for response_msg in stdout:
-            output['out'] += response_msg.strip('\n')
-            print(response_msg.strip('\n'))
+            output['out'] += response_msg.encode('utf-8').strip('\n')
+            print(response_msg.encode('utf-8').strip('\n'))
         for response_msg in stderr:
-            output['err'] += response_msg.strip('\n')
+            output['err'] += response_msg.encode('utf-8').strip('\n')
         ssh.close()
         print("Exec done.")
         return output

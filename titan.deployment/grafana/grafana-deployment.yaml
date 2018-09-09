@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+       task: monitor
+       k8s-app: grafana
+  template:
+    metadata:
+      labels:
+        task: monitor
+        k8s-app: grafana
+    spec:
+      nodeSelector:
+        grafana: "true"
+      containers:
+      - name: grafana
+        image: grafana/grafana
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3333
+          protocol: TCP

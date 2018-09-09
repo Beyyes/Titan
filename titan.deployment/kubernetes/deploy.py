@@ -4,6 +4,7 @@ from os import listdir
 from os.path import isfile, join
 import subprocess
 import argparse
+import logging
 
 class Deployment:
 
@@ -15,7 +16,7 @@ class Deployment:
         self.join_cmd = ""
 
     def pack_script(self):
-        tar_cmd = "tar -cvf init_ script.tar script";
+        tar_cmd = "tar -cvf init_ script.tar script"
         subprocess.check_call(tar_cmd, shell=True)
 
     def transferScripts(self, host):
@@ -34,15 +35,21 @@ class Deployment:
     def deployMaster(self):
         host = self.hosts['master'][0]
         self.transferScripts(host)
-        cmd = "cd /home/{0}/{1}/ && sudo ./init_master.sh".format(host.username, self.script_folder)
+        cmd = "cd /home/{0}/{1}/ && sudo ./init_master.sh {2}".format(host.username, self.script_folder, host.username)
         output = self.remoteTool.execute_cmd(host, cmd)
         self.join_cmd = self.extract_join_cmd(output['out'])
+        cmd = "kubectl label nodes {0} k8s-master=true".format(host.hostname)
+        print(cmd)
+        output = self.remoteTool.execute_cmd(host, cmd)
+        # we need store
+
         # clear(host)
 
     def deploySlaves(self):
         for host in self.hosts['slave']:
             self.transferScripts(host)
-            prepare_cmd = "cd /home/{0}/{1}/ && sudo ./prepare_env.sh".format(host.username, self.script_folder)
+            prepare_cmd = "cd /home/{0}/{1}/ && sudo ./prepare_env.sh {2}".format(host.username, self.script_folder, host.username)
+            #print("!!!!" + prepare_cmd)
             self.remoteTool.execute_cmd(host, prepare_cmd)
             join_cmd = "sudo {0}".format(self.join_cmd)
             self.remoteTool.execute_cmd(host, join_cmd)
