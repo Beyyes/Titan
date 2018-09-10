@@ -5,6 +5,7 @@ from os.path import isfile, join
 import subprocess
 import argparse
 import logging
+import commands
 
 class Deployment:
 
@@ -81,6 +82,17 @@ class Deployment:
             self.remoteTool.execute_cmd(host, clean_cmd)
         print("\nSuccessfully clear kubernetes on cluster")
 
+    def add_node(self):
+        token = commands.getoutput("sudo kubeadm token create")
+        hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
+                                  "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
+
+        # for host in self.hosts['slave']:
+        #     join_cmd = "sudo kubeadm join {0}:6443 --token {1} " \
+        #                "--discovery-token-ca-cert-hash sha256:{2}".format(hostip, token, hash)
+        #     self.remoteTool.execute_cmd(host, join_cmd)
+        #
+        # print("\nSuccessfully add new node to kubernetes cluster")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -92,6 +104,8 @@ if __name__ == '__main__':
         deployment.deploy()
     elif args.action == 'reset':
         deployment.reset_cluster()
+    elif args.action == 'add':
+        deployment.add_node()
     else:
         print("Error parameter for ACTION")
 

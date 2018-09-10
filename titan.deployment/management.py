@@ -6,7 +6,8 @@ import logging
 import logging.config
 import subprocess
 import ui_deploy
-#from ruamel import yaml
+from kubernetes.remoteTool import RemoteTool
+from kubernetes.deploy import Deployment
 
 logger = logging.getLogger(__name__)
 
@@ -154,6 +155,7 @@ class Management:
         with open(node_file, "r") as f:
             raw_config = yaml.load(f)
 
+        deployment = Deployment()
         for node in raw_config['machine-list']:
             hostname = node['hostname']
             hostip = node['hostip']
@@ -161,14 +163,15 @@ class Management:
             hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
                                       "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
             join_cmd = "kubeadm join {0}:6443 --token {1} " \
-                       "--discovery-token-ca-cert-hash sha256:{2}".format(hostip, token, hash)
-            execute_shell(join_cmd, "Join new node meets error!")
+                       "--discovery-token-ca-cert-hash sha256:{2}".format(deployment.hosts['master'], token, hash)
+            print(">> Kubeadm join cmd : " + join_cmd)
+            deployment.remoteTool.execute_cmd(deployment.hosts['master'], join_cmd)
 
-            label_nodes = "kubectl label nodes {0} machinetype=gpu && " \
+            label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu && " \
                           "kubectl label nodes {1} node-exporter=true && " \
                           "kubectl label nodes {2} yarnrole=worker && " \
                           "kubectl label nodes {3} hdfsrole=worker".format(hostname, hostname, hostname, hostname)
-            execute_shell(label_nodes, "Labels new node meets error!")
+            execute_shell(label_nodes_cmd, "Labels new node meets error!")
 
             yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
             yaml_config = yaml.load(yaml_config)
@@ -184,8 +187,8 @@ class Management:
                 yaml.dump(yaml_config, f, default_flow_style=False)
             f.close()
 
-            # config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
-            # execute_shell(config_command, "Modify new node configmap meets error!")
+            config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
+            execute_shell(config_command, "Modify new node configmap meets error!")
 
         print("\r\n add new node successfully!")
 

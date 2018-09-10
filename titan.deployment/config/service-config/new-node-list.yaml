@@ -1,21 +1,7 @@
 machine-list:
-
-#    - hostname: host1 # echo `hostname`
-#      hostip: 192.168.1.11
-#      machine-type: D8SV3
-#      etcdid: etcdid1
-#      sshport: PORT
-#      username: username
-#      password: password
-#      k8s-role: master
-#      dashboard: "true"
-#      zkid: "1"
-#      pai-master: "true"
-
     - hostname: spark-XXX
       hostip: 10.190.148.73
       machine-type: NC24R
-      #sshport: PORT
       username: dladmin
       password: Pass_word
       k8s-role: worker
