@@ -70,7 +70,7 @@ class Deployment:
         print("\nSuccessfully deploy kubernetes on cluster")
 
     def reset_cluster(self):
-        reset_cmd = "sudo kubeadm reset"
+        reset_cmd = "sudo kubeadm reset -f"
         for host in self.hosts['master']:
             self.remoteTool.execute_cmd(host, reset_cmd)
             clean_cmd = "cd /home/{0}/{1}/ && sudo ./reset_k8s.sh".format(host.username, self.script_folder)
