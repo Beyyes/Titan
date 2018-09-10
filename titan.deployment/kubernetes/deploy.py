@@ -49,8 +49,11 @@ class Deployment:
         for host in self.hosts['slave']:
             self.transferScripts(host)
             prepare_cmd = "cd /home/{0}/{1}/ && sudo ./prepare_env.sh {2}".format(host.username, self.script_folder, host.username)
-            #print("!!!!" + prepare_cmd)
+            print("Execute prepare script: " + prepare_cmd)
             self.remoteTool.execute_cmd(host, prepare_cmd)
+            reset_cmd = "cd /home/{0}/{1}/ && sudo ./reset_k8s.sh".format(host.username, self.script_folder)
+            print("Execute k8s reset script: " + reset_cmd)
+            self.remoteTool.execute_cmd(host, reset_cmd)
             join_cmd = "sudo {0}".format(self.join_cmd)
             self.remoteTool.execute_cmd(host, join_cmd)
 
