@@ -163,7 +163,7 @@ class Management:
             hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
                                       "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
             join_cmd = "sudo kubeadm join {0}:6443 --token {1} " \
-                       "--discovery-token-ca-cert-hash sha256:{2}".format(deployment.hosts['master'][0], token, hash)
+                       "--discovery-token-ca-cert-hash sha256:{2}".format(deployment.hosts['master'][0]['ip'], token, hash)
             print(">> Kubeadm join cmd : " + join_cmd)
             deployment.remoteTool.execute_cmd(deployment.hosts['master'][0], join_cmd)
 
