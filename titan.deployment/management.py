@@ -8,6 +8,7 @@ import subprocess
 import ui_deploy
 from kubernetes.remoteTool import RemoteTool
 from kubernetes.deploy import Deployment
+from kubernetes.configReader import HostConfig
 
 logger = logging.getLogger(__name__)
 
@@ -157,15 +158,18 @@ class Management:
 
         deployment = Deployment("config/cluster-config.yaml")
         for node in raw_config['machine-list']:
-            hostname = node['hostname']
-            hostip = node['hostip']
+
             token = commands.getoutput("sudo kubeadm token create")
             hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
                                       "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
             join_cmd = "sudo kubeadm join {0}:6443 --token {1} " \
                        "--discovery-token-ca-cert-hash sha256:{2}".format(deployment.hosts['master'][0].ip, token, hash)
             print(">> Kubeadm join cmd : " + join_cmd)
-            deployment.remoteTool.execute_cmd(deployment.hosts['master'][0], join_cmd)
+
+            hostname = node['hostname']
+            hostip = node['hostip']
+            host = HostConfig(node)
+            deployment.remoteTool.execute_cmd(host, join_cmd)
 
             label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu && " \
                           "kubectl label nodes {1} node-exporter=true && " \
