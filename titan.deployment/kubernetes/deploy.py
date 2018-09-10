@@ -9,8 +9,8 @@ import commands
 
 class Deployment:
 
-    def __init__(self):
-        configReader = ConfigReader()
+    def __init__(self, filePath=""):
+        configReader = ConfigReader(filePath)
         self.hosts = configReader.parse()
         self.remoteTool = RemoteTool()
         self.script_folder = "init_k8s_scrpts"

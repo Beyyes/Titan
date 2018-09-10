@@ -155,7 +155,7 @@ class Management:
         with open(node_file, "r") as f:
             raw_config = yaml.load(f)
 
-        deployment = Deployment()
+        deployment = Deployment("config/cluster-config.yaml")
         for node in raw_config['machine-list']:
             hostname = node['hostname']
             hostip = node['hostip']
