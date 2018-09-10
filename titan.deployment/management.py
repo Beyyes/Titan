@@ -157,18 +157,18 @@ class Management:
         for node in raw_config['machine-list']:
             hostname = node['hostname']
             hostip = node['hostip']
-            # token = commands.getoutput("sudo kubeadm token create")
-            # hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
-            #                           "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
-            # join_cmd = "kubeadm join {0}:6443 --token {1} " \
-            #            "--discovery-token-ca-cert-hash sha256:{2}".format(hostip, token, hash)
-            # execute_shell(join_cmd, "Join new node meets error!")
-            #
-            # label_nodes = "kubectl label nodes {0} machinetype=gpu && " \
-            #               "kubectl label nodes {1} node-exporter=true && " \
-            #               "kubectl label nodes {2} yarnrole=worker && " \
-            #               "kubectl label nodes {3} hdfsrole=worker".format(hostname, hostname, hostname, hostname)
-            # execute_shell(label_nodes, "Labels new node meets error!")
+            token = commands.getoutput("sudo kubeadm token create")
+            hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
+                                      "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
+            join_cmd = "kubeadm join {0}:6443 --token {1} " \
+                       "--discovery-token-ca-cert-hash sha256:{2}".format(hostip, token, hash)
+            execute_shell(join_cmd, "Join new node meets error!")
+
+            label_nodes = "kubectl label nodes {0} machinetype=gpu && " \
+                          "kubectl label nodes {1} node-exporter=true && " \
+                          "kubectl label nodes {2} yarnrole=worker && " \
+                          "kubectl label nodes {3} hdfsrole=worker".format(hostname, hostname, hostname, hostname)
+            execute_shell(label_nodes, "Labels new node meets error!")
 
             yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
             yaml_config = yaml.load(yaml_config)
