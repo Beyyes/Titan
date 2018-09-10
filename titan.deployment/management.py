@@ -165,7 +165,7 @@ class Management:
             join_cmd = "kubeadm join {0}:6443 --token {1} " \
                        "--discovery-token-ca-cert-hash sha256:{2}".format(deployment.hosts['master'], token, hash)
             print(">> Kubeadm join cmd : " + join_cmd)
-            deployment.remoteTool.execute_cmd(deployment.hosts['master'], join_cmd)
+            deployment.remoteTool.execute_cmd(deployment.hosts['master'][0], join_cmd)
 
             label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu && " \
                           "kubectl label nodes {1} node-exporter=true && " \
