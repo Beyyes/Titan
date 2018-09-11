@@ -167,7 +167,7 @@ class Management:
             print(">> Kubeadm join cmd : " + join_cmd)
 
             hostname = node['hostname']
-            hostip = node['hostip']
+            hostip = node['ip']
             host = HostConfig(node)
             deployment.remoteTool.execute_cmd(host, join_cmd)
 
