@@ -195,7 +195,7 @@ class Management:
             yaml_config["data"]["host-configuration.yaml"] = yaml_config["data"]["host-configuration.yaml"] + append_node
             print("\r\nHost configuration is as below:\r\n")
             print(yaml_config)
-            with open("host-configuration.yaml", "w+") as f:
+            with open("host-configuration/host-configuration.yaml", "w+") as f:
                 yaml.dump(yaml_config, f, default_flow_style=False)
             f.close()
 
