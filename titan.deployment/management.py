@@ -270,7 +270,7 @@ if __name__ == '__main__':
     elif args.action == 'add-node':
         management.add_node(args.file)
     elif args.action == 'delete-node':
-        management.add_node(args.file)
+        management.delete_node(args.file)
     elif args.action == 'all':
         management.all_deploy()
     else:
