@@ -6,3 +6,4 @@ machine-list:
       password: Pass_word
       role: worker
       pai-worker: "true"
+      gpu: "false"

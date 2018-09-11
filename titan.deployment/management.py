@@ -171,11 +171,13 @@ class Management:
             host = HostConfig(node)
             deployment.remoteTool.execute_cmd(host, join_cmd)
 
-            label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu && " \
-                          "kubectl label nodes {1} node-exporter=true && " \
-                          "kubectl label nodes {2} yarnrole=worker && " \
-                          "kubectl label nodes {3} hdfsrole=worker".format(hostname, hostname, hostname, hostname)
+            label_nodes_cmd = "kubectl label nodes {0} node-exporter=true && " \
+                          "kubectl label nodes {1} yarnrole=worker && " \
+                          "kubectl label nodes {2} hdfsrole=worker".format(hostname, hostname, hostname)
             execute_shell(label_nodes_cmd, "Labels new node meets error!")
+            if node['gpu'] == "true":
+                label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
+                execute_shell(label_nodes_cmd, "Labels new node meets error!")
 
             yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
             yaml_config = yaml.load(yaml_config)
