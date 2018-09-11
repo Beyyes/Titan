@@ -197,7 +197,24 @@ class Management:
         print("\r\n add new node successfully!")
 
     def delete_node(self, node_file):
-        return
+        print(log("Delete exist node"))
+        with open(node_file, "r") as f:
+            raw_config = yaml.load(f)
+
+        deployment = Deployment("config/cluster-config.yaml")
+        for node in raw_config['machine-list']:
+            delete_nodes_cmd = "kubectl delete node {0}".format(node['hostname'])
+            execute_shell(delete_nodes_cmd, "Labels new node meets error!")
+
+            hostname = node['hostname']
+            hostip = node['ip']
+            script_folder = "init_k8s_scrpts"
+            host = HostConfig(node)
+            k8s_reset_cmd = "sudo kubeadm reset"
+            deployment.remoteTool.execute_cmd(host, k8s_reset_cmd)
+            k8s_clean_cmd = "cd /home/{0}/{1}/ && sudo sh init_master.sh {2}".format(node['hostname'], script_folder, node['username'])
+            deployment.remoteTool.execute_cmd(host, k8s_clean_cmd)
+        print("\r\n Delete node successfully!")
 
     def test(self):
         host_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
