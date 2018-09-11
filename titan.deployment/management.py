@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 class Management:
     def __init__(self):
+        self.all_node_file = "config/all-node.yaml"
         return
 
     def k8s_deploy(self):
@@ -154,24 +155,24 @@ class Management:
 
     def add_node(self, node_file):
         print(log("Add new node"))
-        with open(node_file, "r") as f:
-            raw_config = yaml.load(f)
+
+        examine_snapshot_exist()
+
+        with open(node_file, "r") as new_node_file:
+            new_node_config = yaml.load(new_node_file)
+
+        with open(self.all_node_file, "r") as all_node_file:
+            all_node_config = yaml.load(all_node_file)
 
         deployment = Deployment("config/cluster-config.yaml")
-        for node in raw_config['machine-list']:
+        for node in new_node_config['machine-list']:
 
             hostname = node['hostname']
             hostip = node['ip']
-            yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
-            yaml_config = yaml.load(yaml_config)
-            append_node = "    \n\n{0}:\n    ip: {1}\n    hostname: spark-master\n    " \
-                   "dataFolder: \n    machinetype: gpu\n    hdfsrole: worker\n    yarnrole: worker\n".format(hostname, hostip)
-            yaml_config["data"]["host-configuration.yaml"] = yaml_config["data"]["host-configuration.yaml"] + append_node
-            print("\r\nHost configuration is as below:\r\n")
-            print(yaml_config)
-            with open("host-configuration/host-configuration.yaml", "w+") as f:
-                yaml.dump(yaml_config["data"]["host-configuration.yaml"], f, default_flow_style=False)
-            f.close()
+
+            list = []
+            d = {}
+            d['']
 
             config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
             execute_shell(config_command, "Modify new node configmap meets error!")
@@ -198,15 +199,26 @@ class Management:
                 label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
                 execute_shell(label_nodes_cmd, "Labels new node meets error!")
 
+        new_node_file.close()
+        all_node_file.close()
         print("\r\n add new node successfully!")
 
     def delete_node(self, node_file):
         print(log("Delete exist node"))
-        with open(node_file, "r") as f:
-            raw_config = yaml.load(f)
+
+        examine_snapshot_exist()
+
+        with open(node_file, "r") as delete_node_file:
+            delete_node_config = yaml.load(delete_node_file)
+
+        with open(self.all_node_file, "r") as delete_node_file:
+            all_node_config = yaml.load(delete_node_file)
 
         deployment = Deployment("config/cluster-config.yaml")
-        for node in raw_config['machine-list']:
+        for node in delete_node_config['machine-list']:
+
+            
+
             delete_nodes_cmd = "kubectl delete node {0}".format(node['hostname'])
             execute_shell(delete_nodes_cmd, "Labels new node meets error!")
 
@@ -234,39 +246,79 @@ def execute_shell(shell_cmd, error_msg):
     except subprocess.CalledProcessError:
         logger.error(error_msg)
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-a', '--action', required=True, default=None,
-                        help="action to execute. select one from 'k8s', 'ui', 'airflow' and 'all'")
-    parser.add_argument('-f', '--file', default=None, help="An yamlfile with the nodelist to maintain")
-    args = parser.parse_args()
 
-    management = Management()
-    if args.action == 'k8s-deploy':
-        management.k8s_deploy()
-    elif args.action == 'k8s-clean':
-        management.k8s_clean()
-    elif args.action == 'k8s-dashboard':
-        management.k8s_dashboard_deploy()
-    elif args.action == 'pai-deploy':
-        management.pai_deploy()
-    elif args.action == 'pai-clean':
-        management.pai_clean()
-    elif args.action == 'airflow-deploy':
-        management.airflow_deploy()
-    elif args.action == 'airflow-start':
-        management.airflow_start()
-    elif args.action == 'airflow-clean':
-        management.airflow_clean()
-    elif args.action == 'ui-deploy':
-        management.ui_deploy()
-    elif args.action == 'ui-clean':
-        management.ui_clean()
-    elif args.action == 'add-node':
-        management.add_node(args.file)
-    elif args.action == 'delete-node':
-        management.delete_node(args.file)
-    elif args.action == 'all':
-        management.all_deploy()
-    else:
-        print("Error parameter for ACTION")
+def examine_snapshot_exist():
+    all_node_file = "config/all-node.yaml"
+
+    if os.path.exists(all_node_file):
+        return
+
+    list = []
+
+    with open("config/cluster-config.yaml", "r") as f:
+        raw_config = yaml.load(f)
+        for node in raw_config['host-list']:
+            d = {}
+            d['dataFolder'] = ""
+            if node['gpu'] == "true":
+                d['machinetype'] = "gpu"
+            if node['role'] == 'master':
+                d['zkid'] = 1
+                d['ip'] = node['ip']
+                d['hdfsrole'] = "master"
+                d['yarnrole'] = "master"
+                d['zookeeper'] = "true"
+                d['jobhistory'] = "true"
+                d['launcher'] = "true"
+                d['restserver'] = "true"
+                d['webportal'] = "true"
+            else:
+                d['ip'] = node['ip']
+                d['hdfsrole'] = "worker"
+                d['yarnrole'] = "worker"
+            dict = {}
+            dict[node['hostname']] = d
+            list.append(dict)
+        with open(all_node_file, "w+") as new_file:
+            yaml.dump(list, new_file, default_flow_style=False)
+        new_file.close()
+    f.close()
+
+if __name__ == '__main__':
+    examine_snapshot_exist()
+
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('-a', '--action', required=True, default=None,
+    #                     help="action to execute. select one from 'k8s', 'ui', 'airflow' and 'all'")
+    # parser.add_argument('-f', '--file', default=None, help="An yamlfile with the nodelist to maintain")
+    # args = parser.parse_args()
+    #
+    # management = Management()
+    # if args.action == 'k8s-deploy':
+    #     management.k8s_deploy()
+    # elif args.action == 'k8s-clean':
+    #     management.k8s_clean()
+    # elif args.action == 'k8s-dashboard':
+    #     management.k8s_dashboard_deploy()
+    # elif args.action == 'pai-deploy':
+    #     management.pai_deploy()
+    # elif args.action == 'pai-clean':
+    #     management.pai_clean()
+    # elif args.action == 'airflow-deploy':
+    #     management.airflow_deploy()
+    # elif args.action == 'airflow-start':
+    #     management.airflow_start()
+    # elif args.action == 'airflow-clean':
+    #     management.airflow_clean()
+    # elif args.action == 'ui-deploy':
+    #     management.ui_deploy()
+    # elif args.action == 'ui-clean':
+    #     management.ui_clean()
+    # elif args.action == 'add-node':
+    #     management.add_node(args.file)
+    # elif args.action == 'delete-node':
+    #     management.delete_node(args.file)
+    # elif args.action == 'all':
+    #     management.all_deploy()
+    # else:
+    #     print("Error parameter for ACTION")

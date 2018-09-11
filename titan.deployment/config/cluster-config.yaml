@@ -5,6 +5,7 @@ host-list:
   role: master
   username: dladmin
   password: Pass_word
+  gpu: false
 
 - hostname: spark-slave3
   ip: 10.190.176.175 
@@ -12,6 +13,7 @@ host-list:
   role: slave
   username: dladmin
   password: Pass_word
+  gpu: false
 
 - hostname: spark-slave4
   ip: 10.190.177.242
@@ -19,3 +21,4 @@ host-list:
   role: slave
   username: dladmin
   password: Pass_word
+  gpu: false
