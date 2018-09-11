@@ -196,7 +196,7 @@ class Management:
             print("\r\nHost configuration is as below:\r\n")
             print(yaml_config)
             with open("host-configuration/host-configuration.yaml", "w+") as f:
-                yaml.dump(yaml_config, f, default_flow_style=False)
+                yaml.dump(yaml_config["data"]["host-configuration.yaml"], f, default_flow_style=False)
             f.close()
 
             config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
