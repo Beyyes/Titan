@@ -184,23 +184,19 @@ class Management:
                 label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
                 execute_shell(label_nodes_cmd, "Labels new node meets error!")
 
-            yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
-            yaml_config = yaml.load(yaml_config)
+            # yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
+            # yaml_config = yaml.load(yaml_config)
+            # append_node = "    \n\n{0}:\n    ip: {1}\n    hostname: spark-master\n    " \
+            #        "dataFolder: \n    machinetype: gpu\n    hdfsrole: worker\n    yarnrole: worker\n".format(hostname, hostip)
+            # yaml_config["data"]["host-configuration.yaml"] = yaml_config["data"]["host-configuration.yaml"] + append_node
+            # print("\r\nHost configuration is as below:\r\n")
             # print(yaml_config)
-            # print(yaml_config["data"])
-            # print(yaml_config["data"]["host-configuration.yaml"])
-            #content = yaml_config["data"]["host-configuration.yaml"]
-            append_node = "    \n\n{0}:\n    ip: {1}\n    hostname: spark-master\n    " \
-                   "dataFolder: \n    machinetype: gpu\n    hdfsrole: worker\n    yarnrole: worker\n".format(hostname, hostip)
-            yaml_config["data"]["host-configuration.yaml"] = yaml_config["data"]["host-configuration.yaml"] + append_node
-            print("\r\nHost configuration is as below:\r\n")
-            print(yaml_config)
-            with open("host-configuration/host-configuration.yaml", "w+") as f:
-                yaml.dump(yaml_config["data"]["host-configuration.yaml"], f, default_flow_style=False)
-            f.close()
-
-            config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
-            execute_shell(config_command, "Modify new node configmap meets error!")
+            # with open("host-configuration/host-configuration.yaml", "w+") as f:
+            #     yaml.dump(yaml_config["data"]["host-configuration.yaml"], f, default_flow_style=False)
+            # f.close()
+            #
+            # config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
+            # execute_shell(config_command, "Modify new node configmap meets error!")
 
         print("\r\n add new node successfully!")
 
