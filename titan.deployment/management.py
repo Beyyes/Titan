@@ -174,6 +174,7 @@ class Management:
             label_nodes_cmd = "kubectl label nodes {0} node-exporter=true && " \
                           "kubectl label nodes {1} yarnrole=worker && " \
                           "kubectl label nodes {2} hdfsrole=worker".format(hostname, hostname, hostname)
+            print("Execute labels cmd : " + label_nodes_cmd)
             execute_shell(label_nodes_cmd, "Labels new node meets error!")
             if node['gpu'] == "true":
                 label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
