@@ -160,6 +160,22 @@ class Management:
         deployment = Deployment("config/cluster-config.yaml")
         for node in raw_config['machine-list']:
 
+            hostname = node['hostname']
+            hostip = node['ip']
+            yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
+            yaml_config = yaml.load(yaml_config)
+            append_node = "    \n\n{0}:\n    ip: {1}\n    hostname: spark-master\n    " \
+                   "dataFolder: \n    machinetype: gpu\n    hdfsrole: worker\n    yarnrole: worker\n".format(hostname, hostip)
+            yaml_config["data"]["host-configuration.yaml"] = yaml_config["data"]["host-configuration.yaml"] + append_node
+            print("\r\nHost configuration is as below:\r\n")
+            print(yaml_config)
+            with open("host-configuration/host-configuration.yaml", "w+") as f:
+                yaml.dump(yaml_config["data"]["host-configuration.yaml"], f, default_flow_style=False)
+            f.close()
+
+            config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
+            execute_shell(config_command, "Modify new node configmap meets error!")
+
             token = commands.getoutput("sudo kubeadm token create")
             hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
                                       "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
@@ -167,8 +183,6 @@ class Management:
                        "--discovery-token-ca-cert-hash sha256:{2}".format(deployment.hosts['master'][0].ip, token, hash)
             print(">> Kubeadm join cmd : " + join_cmd)
 
-            hostname = node['hostname']
-            hostip = node['ip']
             host = HostConfig(node)
             deployment.remoteTool.execute_cmd(host, join_cmd)
 
@@ -183,20 +197,6 @@ class Management:
             if node['gpu'] == "true":
                 label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
                 execute_shell(label_nodes_cmd, "Labels new node meets error!")
-
-            # yaml_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
-            # yaml_config = yaml.load(yaml_config)
-            # append_node = "    \n\n{0}:\n    ip: {1}\n    hostname: spark-master\n    " \
-            #        "dataFolder: \n    machinetype: gpu\n    hdfsrole: worker\n    yarnrole: worker\n".format(hostname, hostip)
-            # yaml_config["data"]["host-configuration.yaml"] = yaml_config["data"]["host-configuration.yaml"] + append_node
-            # print("\r\nHost configuration is as below:\r\n")
-            # print(yaml_config)
-            # with open("host-configuration/host-configuration.yaml", "w+") as f:
-            #     yaml.dump(yaml_config["data"]["host-configuration.yaml"], f, default_flow_style=False)
-            # f.close()
-            #
-            # config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
-            # execute_shell(config_command, "Modify new node configmap meets error!")
 
         print("\r\n add new node successfully!")
 
