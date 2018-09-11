@@ -269,6 +269,8 @@ if __name__ == '__main__':
         management.ui_clean()
     elif args.action == 'add-node':
         management.add_node(args.file)
+    elif args.action == 'delete-node':
+        management.add_node(args.file)
     elif args.action == 'all':
         management.all_deploy()
     else:
