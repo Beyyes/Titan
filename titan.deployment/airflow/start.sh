@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-sudo su
-chmod u+w /etc/mysql/mysql.conf.d/mysqld.cnf
-echo'explicit_defaults_for_timestamp = true'> /etc/mysql/mysql.conf.d/mysqld.cnf
-chmod u-w /etc/mysql/mysql.conf.d/mysqld.cnf
-exit
+sudo chmod u+w /etc/mysql/mysql.conf.d/mysqld.cnf
+sudo echo'explicit_defaults_for_timestamp = true'> /etc/mysql/mysql.conf.d/mysqld.cnf
+sudo chmod u-w /etc/mysql/mysql.conf.d/mysqld.cnf
 
 sudo service mysql restart
 sudo apt-get install libmysqlclient-dev -y
