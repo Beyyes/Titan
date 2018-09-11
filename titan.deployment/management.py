@@ -9,6 +9,7 @@ import ui_deploy
 from kubernetes.remoteTool import RemoteTool
 from kubernetes.deploy import Deployment
 from kubernetes.configReader import HostConfig
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -171,6 +172,9 @@ class Management:
             host = HostConfig(node)
             deployment.remoteTool.execute_cmd(host, join_cmd)
 
+            # wait for new node to join
+            time.sleep(10)
+
             label_nodes_cmd = "kubectl label nodes {0} node-exporter=true && " \
                           "kubectl label nodes {1} yarnrole=worker && " \
                           "kubectl label nodes {2} hdfsrole=worker".format(hostname, hostname, hostname)
@@ -216,14 +220,6 @@ class Management:
                             "sudo rm -rf /etc/cni/ && sudo rm -rf /etc/kubernetes && sudo rm -rf /var/lib/etcd && sudo systemctl start kubelet && sudo systemctl start docker"
             deployment.remoteTool.execute_cmd(host, k8s_clean_cmd)
         print("\r\n Delete node successfully!")
-
-    def test(self):
-        host_config = commands.getoutput("kubectl get configmap host-configuration -o yaml")
-        with open("host-configuration.yaml", "w+") as f:
-            f.write(host_config)
-        f.close()
-        config_shell = "kubectl delete configmap host-configuration_tmp && " \
-                       "kubectl create configmap host-configuration_tmp --from-file=host-configuration.yaml"
 
     def all_deploy(self):
         print('all-deploy')
