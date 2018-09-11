@@ -172,7 +172,7 @@ class Management:
             host = HostConfig(node)
             deployment.remoteTool.execute_cmd(host, join_cmd)
 
-            # wait for new node to join
+            print("Wait for new node to join")
             time.sleep(10)
 
             label_nodes_cmd = "kubectl label nodes {0} node-exporter=true && " \
