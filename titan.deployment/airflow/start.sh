@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 sudo chmod u+w /etc/mysql/mysql.conf.d/mysqld.cnf
-sudo echo'explicit_defaults_for_timestamp = true'>> /etc/mysql/mysql.conf.d/mysqld.cnf
+sudo echo 'explicit_defaults_for_timestamp = true' >> /etc/mysql/mysql.conf.d/mysqld.cnf
 sudo chmod u-w /etc/mysql/mysql.conf.d/mysqld.cnf
 
 sudo service mysql restart
