@@ -206,13 +206,11 @@ class Management:
             delete_nodes_cmd = "kubectl delete node {0}".format(node['hostname'])
             execute_shell(delete_nodes_cmd, "Labels new node meets error!")
 
-            hostname = node['hostname']
-            hostip = node['ip']
-            script_folder = "init_k8s_scrpts"
             host = HostConfig(node)
             k8s_reset_cmd = "sudo kubeadm reset"
             deployment.remoteTool.execute_cmd(host, k8s_reset_cmd)
-            k8s_clean_cmd = "cd /home/{0}/{1}/ && sudo sh init_master.sh {2}".format(node['hostname'], script_folder, node['username'])
+            k8s_clean_cmd = "sudo systemctl stop kubelet && sudo systemctl stop docker && sudo rm -rf /var/lib/cni/ && sudo rm -rf /var/lib/kubelet/* && " \
+                            "sudo rm -rf /etc/cni/ && sudo rm -rf /etc/kubernetes && sudo rm -rf /var/lib/etcd && sudo systemctl start kubelet && sudo systemctl start docker"
             deployment.remoteTool.execute_cmd(host, k8s_clean_cmd)
         print("\r\n Delete node successfully!")
 
