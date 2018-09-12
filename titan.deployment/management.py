@@ -210,14 +210,6 @@ class Management:
 
         for node in new_node_config['machine-list']:
 
-            dup_flag = False
-            for part in all_node_config:
-                if node['hostname'] == part.keys()[0]:
-                    dup_flag = True
-
-            if dup_flag:
-                continue
-
             hostname = node['hostname']
             token = commands.getoutput("sudo kubeadm token create")
             hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
