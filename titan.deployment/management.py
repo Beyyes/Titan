@@ -13,9 +13,11 @@ import time
 
 logger = logging.getLogger(__name__)
 
+
 class Management:
     def __init__(self):
         self.all_node_file = "config/all-node.yaml"
+        self.script_folder = "init_k8s_scrpts"
         return
 
     def k8s_deploy(self):
@@ -199,7 +201,7 @@ class Management:
                     if key == 'zookeeper' or key == 'jobhistory' or key == 'launcher' or key == 'restserver' or key == 'webportal':
                         output += "\"" + str(d[key]) + "\"\n"
                     else:
-                        output +=  str(d[key]) + "\n"
+                        output += str(d[key]) + "\n"
         print(output)
 
         with open('config/all-node.yaml', 'w') as new_all_node_configuration_file:
@@ -225,19 +227,25 @@ class Management:
             print(">> Kubeadm join cmd : " + join_cmd)
 
             host = HostConfig(node)
-            deployment.remoteTool.execute_cmd(host, join_cmd)
+            deployment.transferScripts(host)
+            clean_kube_cmd = "cd /home/{0}/{1}/ && sudo ./clean_kube.sh".format(host.username, self.script_folder)
+            prepare_env_cmd = "cd /home/{0}/{1}/ && sudo ./prepare_env.sh".format(host.username, self.script_folder)
 
-            print("\r\nWait 20s for new node to join")
-            time.sleep(20)
-
-            label_nodes_cmd = "kubectl label nodes {0} node-exporter=true && " \
-                          "kubectl label nodes {1} yarnrole=worker && " \
-                          "kubectl label nodes {2} hdfsrole=worker".format(hostname, hostname, hostname)
-            print("Execute labels cmd : " + label_nodes_cmd)
-            execute_shell(label_nodes_cmd, "Labels new node meets error!")
-            if node['gpu'] == "true":
-                label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
-                execute_shell(label_nodes_cmd, "Labels new node meets error!")
+            deployment.remoteTool.execute_cmd(host, clean_kube_cmd)
+            deployment.remoteTool.execute_cmd(host, prepare_env_cmd)
+            # deployment.remoteTool.execute_cmd(host, join_cmd)
+            #
+            # print("\r\nWait 20s for new node to join")
+            # time.sleep(20)
+            #
+            # label_nodes_cmd = "kubectl label nodes {0} node-exporter=true && " \
+            #                   "kubectl label nodes {1} yarnrole=worker && " \
+            #                   "kubectl label nodes {2} hdfsrole=worker".format(hostname, hostname, hostname)
+            # print("Execute labels cmd : " + label_nodes_cmd)
+            # execute_shell(label_nodes_cmd, "Labels new node meets error!")
+            # if node['gpu'] == "true":
+            #     label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
+            #     execute_shell(label_nodes_cmd, "Labels new node meets error!")
 
         host_configuration_file.close()
         new_node_file.close()
@@ -254,7 +262,6 @@ class Management:
 
         with open(self.all_node_file, "r") as all_node_file:
             all_node_config = yaml.load(all_node_file)
-
 
         deployment = Deployment("config/cluster-config.yaml")
 
@@ -281,10 +288,10 @@ class Management:
             deployment.remoteTool.execute_cmd(host, k8s_clean_cmd)
             deployment.remoteTool.execute_cmd(host, "sudo rm -rf /datastorage")
 
-        #print(remove_nodes)
+        # print(remove_nodes)
         new_all_node_config = []
         for node in all_node_config:
-            #print(node.keys()[0])
+            # print(node.keys()[0])
             if node.keys()[0] in remove_nodes:
                 continue
             new_all_node_config.append(node)
@@ -303,8 +310,10 @@ class Management:
         self.airflow_deploy()
         self.ui_deploy()
 
+
 def log(log):
     return ("\r\n>>>>>>>>>>>>>>>>>>>>>>> {0} <<<<<<<<<<<<<<<<<<<<<<<\r\n").format(log)
+
 
 def execute_shell(shell_cmd, error_msg):
     try:
@@ -349,6 +358,7 @@ def examine_snapshot_exist():
             yaml.dump(list, new_file, default_flow_style=False)
         new_file.close()
     f.close()
+
 
 if __name__ == '__main__':
 
