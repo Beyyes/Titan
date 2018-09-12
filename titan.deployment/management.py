@@ -181,30 +181,30 @@ class Management:
             dict[node['hostname']] = d
             all_node_config.append(dict)
 
-            # config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
-            # execute_shell(config_command, "Modify new node configmap meets error!")
-            #
-            # token = commands.getoutput("sudo kubeadm token create")
-            # hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
-            #                           "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
-            # join_cmd = "sudo kubeadm join {0}:6443 --token {1} " \
-            #            "--discovery-token-ca-cert-hash sha256:{2}".format(deployment.hosts['master'][0].ip, token, hash)
-            # print(">> Kubeadm join cmd : " + join_cmd)
-            #
-            # host = HostConfig(node)
-            # deployment.remoteTool.execute_cmd(host, join_cmd)
-            #
-            # print("Wait 20s for new node to join")
-            # time.sleep(20)
-            #
-            # label_nodes_cmd = "kubectl label nodes {0} node-exporter=true && " \
-            #               "kubectl label nodes {1} yarnrole=worker && " \
-            #               "kubectl label nodes {2} hdfsrole=worker".format(hostname, hostname, hostname)
-            # print("Execute labels cmd : " + label_nodes_cmd)
-            # execute_shell(label_nodes_cmd, "Labels new node meets error!")
-            # if node['gpu'] == "true":
-            #     label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
-            #     execute_shell(label_nodes_cmd, "Labels new node meets error!")
+            config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
+            execute_shell(config_command, "Modify new node configmap meets error!")
+
+            token = commands.getoutput("sudo kubeadm token create")
+            hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
+                                      "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
+            join_cmd = "sudo kubeadm join {0}:6443 --token {1} " \
+                       "--discovery-token-ca-cert-hash sha256:{2}".format(deployment.hosts['master'][0].ip, token, hash)
+            print(">> Kubeadm join cmd : " + join_cmd)
+
+            host = HostConfig(node)
+            deployment.remoteTool.execute_cmd(host, join_cmd)
+
+            print("Wait 20s for new node to join")
+            time.sleep(20)
+
+            label_nodes_cmd = "kubectl label nodes {0} node-exporter=true && " \
+                          "kubectl label nodes {1} yarnrole=worker && " \
+                          "kubectl label nodes {2} hdfsrole=worker".format(hostname, hostname, hostname)
+            print("Execute labels cmd : " + label_nodes_cmd)
+            execute_shell(label_nodes_cmd, "Labels new node meets error!")
+            if node['gpu'] == "true":
+                label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
+                execute_shell(label_nodes_cmd, "Labels new node meets error!")
 
         with open('host-configuration/host-configuration.yaml', 'w+') as host_configuration_file:
             yaml.dump(all_node_config, host_configuration_file, default_flow_style=False)
@@ -233,16 +233,16 @@ class Management:
                     all_node_config.remove(i)
             #all_node_config.remove(node['hostname'])
 
-            # delete_nodes_cmd = "kubectl delete node {0}".format(node['hostname'])
-            # execute_shell(delete_nodes_cmd, "Labels new node meets error!")
-            #
-            # host = HostConfig(node)
-            # k8s_reset_cmd = "sudo kubeadm reset"
-            # deployment.remoteTool.execute_cmd(host, k8s_reset_cmd)
-            # k8s_clean_cmd = "sudo systemctl stop kubelet && sudo systemctl stop docker && sudo rm -rf /var/lib/cni/ && sudo rm -rf /var/lib/kubelet/* && " \
-            #                 "sudo rm -rf /etc/cni/ && sudo rm -rf /etc/kubernetes && sudo rm -rf /var/lib/etcd && sudo systemctl start kubelet && sudo systemctl start docker"
-            # deployment.remoteTool.execute_cmd(host, k8s_clean_cmd)
-            # deployment.remoteTool.execute_cmd(host, "sudo rm -rf /datastorage")
+            delete_nodes_cmd = "kubectl delete node {0}".format(node['hostname'])
+            execute_shell(delete_nodes_cmd, "Labels new node meets error!")
+
+            host = HostConfig(node)
+            k8s_reset_cmd = "sudo kubeadm reset"
+            deployment.remoteTool.execute_cmd(host, k8s_reset_cmd)
+            k8s_clean_cmd = "sudo systemctl stop kubelet && sudo systemctl stop docker && sudo rm -rf /var/lib/cni/ && sudo rm -rf /var/lib/kubelet/* && " \
+                            "sudo rm -rf /etc/cni/ && sudo rm -rf /etc/kubernetes && sudo rm -rf /var/lib/etcd && sudo systemctl start kubelet && sudo systemctl start docker"
+            deployment.remoteTool.execute_cmd(host, k8s_clean_cmd)
+            deployment.remoteTool.execute_cmd(host, "sudo rm -rf /datastorage")
 
         with open('host-configuration/host-configuration.yaml', 'w+') as host_configuration_file:
             yaml.dump(all_node_config, host_configuration_file, default_flow_style=False)
