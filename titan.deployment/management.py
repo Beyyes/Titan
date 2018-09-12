@@ -197,7 +197,6 @@ class Management:
                         output += "\"" + str(d[key]) + "\"\n"
                     else:
                         output +=  str(d[key]) + "\n"
-
         print(output)
 
         with open('config/all-node.yaml', 'w') as new_all_node_configuration_file:
@@ -206,11 +205,20 @@ class Management:
         with open('host-configuration/host-configuration.yaml', 'w') as host_configuration_file:
             host_configuration_file.write(output)
 
+        config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
+        execute_shell(config_command, "Modify new node configmap meets error!")
+
         for node in new_node_config['machine-list']:
 
-            hostname = node['hostname']
-            hostip = node['ip']
+            dup_flag = False
+            for part in all_node_config:
+                if node['hostname'] == part.keys()[0]:
+                    dup_flag = True
 
+            if dup_flag:
+                continue
+
+            hostname = node['hostname']
             token = commands.getoutput("sudo kubeadm token create")
             hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
                                       "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
@@ -232,9 +240,6 @@ class Management:
             if node['gpu'] == "true":
                 label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
                 execute_shell(label_nodes_cmd, "Labels new node meets error!")
-
-        config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
-        execute_shell(config_command, "Modify new node configmap meets error!")
 
         host_configuration_file.close()
         new_node_file.close()
@@ -334,42 +339,42 @@ def examine_snapshot_exist():
 
 if __name__ == '__main__':
 
-    dep = Management()
-    dep.add_node("config/service-config/new-node-list.yaml")
+    # dep = Management()
+    # dep.add_node("config/service-config/new-node-list.yaml")
     #dep.delete_node("config/service-config/new-node-list.yaml")
 
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('-a', '--action', required=True, default=None,
-    #                     help="action to execute. select one from 'k8s', 'ui', 'airflow' and 'all'")
-    # parser.add_argument('-f', '--file', default=None, help="An yamlfile with the nodelist to maintain")
-    # args = parser.parse_args()
-    #
-    # management = Management()
-    # if args.action == 'k8s-deploy':
-    #     management.k8s_deploy()
-    # elif args.action == 'k8s-clean':
-    #     management.k8s_clean()
-    # elif args.action == 'k8s-dashboard':
-    #     management.k8s_dashboard_deploy()
-    # elif args.action == 'pai-deploy':
-    #     management.pai_deploy()
-    # elif args.action == 'pai-clean':
-    #     management.pai_clean()
-    # elif args.action == 'airflow-deploy':
-    #     management.airflow_deploy()
-    # elif args.action == 'airflow-start':
-    #     management.airflow_start()
-    # elif args.action == 'airflow-clean':
-    #     management.airflow_clean()
-    # elif args.action == 'ui-deploy':
-    #     management.ui_deploy()
-    # elif args.action == 'ui-clean':
-    #     management.ui_clean()
-    # elif args.action == 'add-node':
-    #     management.add_node(args.file)
-    # elif args.action == 'delete-node':
-    #     management.delete_node(args.file)
-    # elif args.action == 'all':
-    #     management.all_deploy()
-    # else:
-    #     print("Error parameter for ACTION")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-a', '--action', required=True, default=None,
+                        help="action to execute. select one from 'k8s', 'ui', 'airflow' and 'all'")
+    parser.add_argument('-f', '--file', default=None, help="An yamlfile with the nodelist to maintain")
+    args = parser.parse_args()
+
+    management = Management()
+    if args.action == 'k8s-deploy':
+        management.k8s_deploy()
+    elif args.action == 'k8s-clean':
+        management.k8s_clean()
+    elif args.action == 'k8s-dashboard':
+        management.k8s_dashboard_deploy()
+    elif args.action == 'pai-deploy':
+        management.pai_deploy()
+    elif args.action == 'pai-clean':
+        management.pai_clean()
+    elif args.action == 'airflow-deploy':
+        management.airflow_deploy()
+    elif args.action == 'airflow-start':
+        management.airflow_start()
+    elif args.action == 'airflow-clean':
+        management.airflow_clean()
+    elif args.action == 'ui-deploy':
+        management.ui_deploy()
+    elif args.action == 'ui-clean':
+        management.ui_clean()
+    elif args.action == 'add-node':
+        management.add_node(args.file)
+    elif args.action == 'delete-node':
+        management.delete_node(args.file)
+    elif args.action == 'all':
+        management.all_deploy()
+    else:
+        print("Error parameter for ACTION")
