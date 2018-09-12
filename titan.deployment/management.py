@@ -335,6 +335,7 @@ def examine_snapshot_exist():
         raw_config = yaml.load(f)
         for node in raw_config['host-list']:
             d = {}
+            d['hostname'] = node['hostname']
             d['dataFolder'] = ""
             if node['gpu'] == "true":
                 d['machinetype'] = "gpu"
