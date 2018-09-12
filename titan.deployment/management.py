@@ -166,10 +166,13 @@ class Management:
 
         deployment = Deployment("config/cluster-config.yaml")
 
+        # duplicate host to store the useless host in new-node-list.yaml
+        dup_host = []
         for node in new_node_config['machine-list']:
             dup_flag = False
             for part in all_node_config:
                 if node['hostname'] == part.keys()[0]:
+                    dup_host.append(node['hostname'])
                     dup_flag = True
 
             if dup_flag:
@@ -209,6 +212,9 @@ class Management:
         execute_shell(config_command, "Modify new node configmap meets error!")
 
         for node in new_node_config['machine-list']:
+            # the current node is already in the k8s cluster
+            if node['hostname'] in dup_host:
+                continue
 
             hostname = node['hostname']
             token = commands.getoutput("sudo kubeadm token create")
@@ -251,12 +257,16 @@ class Management:
 
         deployment = Deployment("config/cluster-config.yaml")
         for node in delete_node_config['machine-list']:
+            exist_flag = False
 
             for i in range(0, len(all_node_config)):
                 if all_node_config[i].keys()[0] == node['hostname']:
+                    exist_flag = True
                     all_node_config.remove(i)
-            #all_node_config.remove(node['hostname'])
 
+            if exist_flag == False:
+                continue
+                
             delete_nodes_cmd = "kubectl delete node {0}".format(node['hostname'])
             execute_shell(delete_nodes_cmd, "Labels new node meets error!")
 
@@ -268,7 +278,7 @@ class Management:
             deployment.remoteTool.execute_cmd(host, k8s_clean_cmd)
             deployment.remoteTool.execute_cmd(host, "sudo rm -rf /datastorage")
 
-        with open('config/all-node.yaml', 'ws') as new_all_node_file:
+        with open('config/all-node.yaml', 'w') as new_all_node_file:
             yaml.dump(all_node_config, new_all_node_file, default_flow_style=False)
 
         new_all_node_file.close()
