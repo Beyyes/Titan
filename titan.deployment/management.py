@@ -181,9 +181,6 @@ class Management:
             dict[node['hostname']] = d
             all_node_config.append(dict)
 
-            config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
-            execute_shell(config_command, "Modify new node configmap meets error!")
-
             token = commands.getoutput("sudo kubeadm token create")
             hash = commands.getoutput("openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | "
                                       "openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'")
@@ -194,7 +191,7 @@ class Management:
             host = HostConfig(node)
             deployment.remoteTool.execute_cmd(host, join_cmd)
 
-            print("Wait 20s for new node to join")
+            print("\r\nWait 20s for new node to join")
             time.sleep(20)
 
             label_nodes_cmd = "kubectl label nodes {0} node-exporter=true && " \
@@ -206,8 +203,14 @@ class Management:
                 label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
                 execute_shell(label_nodes_cmd, "Labels new node meets error!")
 
-        with open('host-configuration/host-configuration.yaml', 'w+') as host_configuration_file:
+        with open('config/all-node.yaml', 'w') as new_all_node_configuration_file:
+            yaml.dump(all_node_config, new_all_node_configuration_file, default_flow_style=False)
+
+        with open('host-configuration/host-configuration.yaml', 'w') as host_configuration_file:
             yaml.dump(all_node_config, host_configuration_file, default_flow_style=False)
+
+        config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
+        execute_shell(config_command, "Modify new node configmap meets error!")
 
         host_configuration_file.close()
         new_node_file.close()
@@ -244,10 +247,10 @@ class Management:
             deployment.remoteTool.execute_cmd(host, k8s_clean_cmd)
             deployment.remoteTool.execute_cmd(host, "sudo rm -rf /datastorage")
 
-        with open('host-configuration/host-configuration.yaml', 'w+') as host_configuration_file:
-            yaml.dump(all_node_config, host_configuration_file, default_flow_style=False)
+        with open('config/all-node.yaml', 'ws') as new_all_node_file:
+            yaml.dump(all_node_config, new_all_node_file, default_flow_style=False)
 
-        host_configuration_file.close()
+        new_all_node_file.close()
         delete_node_file.close()
         all_node_file.close()
         print("\r\n Delete node successfully!")
