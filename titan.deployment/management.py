@@ -228,9 +228,11 @@ class Management:
             host = HostConfig(node)
             deployment.transferScripts(host, "kubernetes/script/")
             clean_kube_cmd = "cd /home/{0}/{1}/ && sudo ./clean_kube.sh".format(host.username, self.script_folder)
+            clean_cluster_cmd = "cd /home/{0}/{1}/ && sudo ./reset_k8s.sh".format(host.username, self.script_folder)
             prepare_env_cmd = "cd /home/{0}/{1}/ && sudo ./prepare_env.sh".format(host.username, self.script_folder)
 
             deployment.remoteTool.execute_cmd(host, clean_kube_cmd)
+            deployment.remoteTool.execute_cmd(host, clean_cluster_cmd)
             deployment.remoteTool.execute_cmd(host, prepare_env_cmd)
             deployment.remoteTool.execute_cmd(host, join_cmd)
 
