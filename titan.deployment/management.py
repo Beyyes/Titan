@@ -210,8 +210,8 @@ class Management:
         with open('host-configuration/host-configuration.yaml', 'w') as host_configuration_file:
             host_configuration_file.write(output)
 
-        config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
-        execute_shell(config_command, "Modify new node configmap meets error!")
+        #config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
+        #execute_shell(config_command, "Modify new node configmap meets error!")
 
         for node in new_node_config['machine-list']:
             # the current node is already in the k8s cluster
@@ -227,7 +227,7 @@ class Management:
             print(">> Kubeadm join cmd : " + join_cmd)
 
             host = HostConfig(node)
-            deployment.transferScripts(host)
+            deployment.transferScripts(host, "kubernetes/script/")
             clean_kube_cmd = "cd /home/{0}/{1}/ && sudo ./clean_kube.sh".format(host.username, self.script_folder)
             prepare_env_cmd = "cd /home/{0}/{1}/ && sudo ./prepare_env.sh".format(host.username, self.script_folder)
 

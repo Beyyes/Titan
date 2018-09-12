@@ -20,8 +20,9 @@ class Deployment:
         tar_cmd = "tar -cvf init_ script.tar script"
         subprocess.check_call(tar_cmd, shell=True)
 
-    def transferScripts(self, host):
-        scripts_folder = "script"
+    def transferScripts(self, host, scripts_folder = ""):
+        if scripts_folder == "":
+            scripts_folder = "script"
         scripts = [f for f in listdir(scripts_folder) if isfile(join(scripts_folder, f))]
         dst_path = "/home/{0}/{1}".format(host.username, self.script_folder)
         # mkdir on remote host
