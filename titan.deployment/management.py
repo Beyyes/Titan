@@ -209,8 +209,8 @@ class Management:
         with open('host-configuration/host-configuration.yaml', 'w') as host_configuration_file:
             host_configuration_file.write(output)
 
-        #config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
-        #execute_shell(config_command, "Modify new node configmap meets error!")
+        config_command = "kubectl create configmap host-configuration --from-file=host-configuration/ --dry-run -o yaml | kubectl replace -f -"
+        execute_shell(config_command, "Modify new node configmap meets error!")
 
         for node in new_node_config['machine-list']:
             # the current node is already in the k8s cluster
@@ -232,19 +232,19 @@ class Management:
 
             deployment.remoteTool.execute_cmd(host, clean_kube_cmd)
             deployment.remoteTool.execute_cmd(host, prepare_env_cmd)
-            # deployment.remoteTool.execute_cmd(host, join_cmd)
-            #
-            # print("\r\nWait 20s for new node to join")
-            # time.sleep(20)
-            #
-            # label_nodes_cmd = "kubectl label nodes {0} node-exporter=true && " \
-            #                   "kubectl label nodes {1} yarnrole=worker && " \
-            #                   "kubectl label nodes {2} hdfsrole=worker".format(hostname, hostname, hostname)
-            # print("Execute labels cmd : " + label_nodes_cmd)
-            # execute_shell(label_nodes_cmd, "Labels new node meets error!")
-            # if node['gpu'] == "true":
-            #     label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
-            #     execute_shell(label_nodes_cmd, "Labels new node meets error!")
+            deployment.remoteTool.execute_cmd(host, join_cmd)
+
+            print("\r\nWait 20s for new node to join")
+            time.sleep(20)
+
+            label_nodes_cmd = "kubectl label nodes {0} node-exporter=true && " \
+                              "kubectl label nodes {1} yarnrole=worker && " \
+                              "kubectl label nodes {2} hdfsrole=worker".format(hostname, hostname, hostname)
+            print("Execute labels cmd : " + label_nodes_cmd)
+            execute_shell(label_nodes_cmd, "Labels new node meets error!")
+            if node['gpu'] == "true":
+                label_nodes_cmd = "kubectl label nodes {0} machinetype=gpu".format(hostname)
+                execute_shell(label_nodes_cmd, "Labels new node meets error!")
 
         host_configuration_file.close()
         new_node_file.close()
