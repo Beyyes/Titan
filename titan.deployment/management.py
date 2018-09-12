@@ -255,18 +255,21 @@ class Management:
         with open(self.all_node_file, "r") as all_node_file:
             all_node_config = yaml.load(all_node_file)
 
+
         deployment = Deployment("config/cluster-config.yaml")
+
+        remove_nodes = []
         for node in delete_node_config['machine-list']:
             exist_flag = False
 
             for i in range(0, len(all_node_config)):
                 if all_node_config[i].keys()[0] == node['hostname']:
                     exist_flag = True
-                    all_node_config.remove(i)
+                    remove_nodes.append(all_node_config[i].keys()[0])
 
             if exist_flag == False:
                 continue
-                
+
             delete_nodes_cmd = "kubectl delete node {0}".format(node['hostname'])
             execute_shell(delete_nodes_cmd, "Labels new node meets error!")
 
@@ -278,8 +281,16 @@ class Management:
             deployment.remoteTool.execute_cmd(host, k8s_clean_cmd)
             deployment.remoteTool.execute_cmd(host, "sudo rm -rf /datastorage")
 
+        #print(remove_nodes)
+        new_all_node_config = []
+        for node in all_node_config:
+            #print(node.keys()[0])
+            if node.keys()[0] in remove_nodes:
+                continue
+            new_all_node_config.append(node)
+
         with open('config/all-node.yaml', 'w') as new_all_node_file:
-            yaml.dump(all_node_config, new_all_node_file, default_flow_style=False)
+            yaml.dump(new_all_node_config, new_all_node_file, default_flow_style=False)
 
         new_all_node_file.close()
         delete_node_file.close()
@@ -341,42 +352,42 @@ def examine_snapshot_exist():
 
 if __name__ == '__main__':
 
-    # dep = Management()
-    # dep.add_node("config/service-config/new-node-list.yaml")
-    #dep.delete_node("config/service-config/new-node-list.yaml")
+    dep = Management()
+    dep.add_node("config/service-config/new-node-list.yaml")
+    dep.delete_node("config/service-config/new-node-list.yaml")
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-a', '--action', required=True, default=None,
-                        help="action to execute. select one from 'k8s', 'ui', 'airflow' and 'all'")
-    parser.add_argument('-f', '--file', default=None, help="An yamlfile with the nodelist to maintain")
-    args = parser.parse_args()
-
-    management = Management()
-    if args.action == 'k8s-deploy':
-        management.k8s_deploy()
-    elif args.action == 'k8s-clean':
-        management.k8s_clean()
-    elif args.action == 'k8s-dashboard':
-        management.k8s_dashboard_deploy()
-    elif args.action == 'pai-deploy':
-        management.pai_deploy()
-    elif args.action == 'pai-clean':
-        management.pai_clean()
-    elif args.action == 'airflow-deploy':
-        management.airflow_deploy()
-    elif args.action == 'airflow-start':
-        management.airflow_start()
-    elif args.action == 'airflow-clean':
-        management.airflow_clean()
-    elif args.action == 'ui-deploy':
-        management.ui_deploy()
-    elif args.action == 'ui-clean':
-        management.ui_clean()
-    elif args.action == 'add-node':
-        management.add_node(args.file)
-    elif args.action == 'delete-node':
-        management.delete_node(args.file)
-    elif args.action == 'all':
-        management.all_deploy()
-    else:
-        print("Error parameter for ACTION")
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('-a', '--action', required=True, default=None,
+    #                     help="action to execute. select one from 'k8s', 'ui', 'airflow' and 'all'")
+    # parser.add_argument('-f', '--file', default=None, help="An yamlfile with the nodelist to maintain")
+    # args = parser.parse_args()
+    #
+    # management = Management()
+    # if args.action == 'k8s-deploy':
+    #     management.k8s_deploy()
+    # elif args.action == 'k8s-clean':
+    #     management.k8s_clean()
+    # elif args.action == 'k8s-dashboard':
+    #     management.k8s_dashboard_deploy()
+    # elif args.action == 'pai-deploy':
+    #     management.pai_deploy()
+    # elif args.action == 'pai-clean':
+    #     management.pai_clean()
+    # elif args.action == 'airflow-deploy':
+    #     management.airflow_deploy()
+    # elif args.action == 'airflow-start':
+    #     management.airflow_start()
+    # elif args.action == 'airflow-clean':
+    #     management.airflow_clean()
+    # elif args.action == 'ui-deploy':
+    #     management.ui_deploy()
+    # elif args.action == 'ui-clean':
+    #     management.ui_clean()
+    # elif args.action == 'add-node':
+    #     management.add_node(args.file)
+    # elif args.action == 'delete-node':
+    #     management.delete_node(args.file)
+    # elif args.action == 'all':
+    #     management.all_deploy()
+    # else:
+    #     print("Error parameter for ACTION")

@@ -1,5 +1,5 @@
 machine-list:
-    - hostname: spark-slave1
+    - hostname: spark-master
       ip: 10.190.148.73
       port: 22
       username: dladmin
