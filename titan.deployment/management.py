@@ -13,7 +13,6 @@ import time
 
 logger = logging.getLogger(__name__)
 
-
 class Management:
     def __init__(self):
         self.all_node_file = "config/all-node.yaml"

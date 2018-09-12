@@ -29,6 +29,8 @@ class Deployment:
         self.remoteTool.execute_cmd(host, "mkdir -p {0}".format(dst_path))
 
         for script in scripts:
+            print("script path:")
+            print(script)
             self.remoteTool.sftp_paramiko("{0}/{1}".format(scripts_folder, script), "{0}/{1}".format(dst_path, script),
                                           host)
         # set exec mode
