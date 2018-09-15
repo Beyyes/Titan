@@ -38,19 +38,21 @@ if kubelet --version > /dev/null 2>&1; then
     printInfo "kubelet has been installed"
 else
     printInfo "install kubelet..."
-    apt-get install -y kubelet
-fi
-
-if kubeadm version > /dev/null 2>&1; then
-    printInfo "kubeadm has been installed"
-else
-    printInfo "install kubeadm..."
-    apt-get install -y kubeadm
+    apt-get install -y kubelet=1.10.1-00
 fi
 
 if kubectl help > /dev/null 2>&1; then
     printInfo "kubectl has been installed"
 else
     printInfo "install kubectl..."
-    apt-get install -y kubectl
+    apt-get install -y kubectl=1.10.1-00
 fi
+
+if kubeadm version > /dev/null 2>&1; then
+    printInfo "kubeadm has been installed"
+else
+    printInfo "install kubeadm..."
+    apt-get install -y kubeadm=1.10.1-00
+fi
+
+

@@ -3,8 +3,11 @@ import yaml
 
 class ConfigReader:
 
-    def __init__(self):
-        self.config_file_path = '../config/cluster-config.yaml'
+    def __init__(self, filePath=""):
+        if filePath != "":
+            self.config_file_path = filePath
+        else:
+            self.config_file_path = '../config/cluster-config.yaml'
         self.hosts = dict()
         self.hosts['master'] = []
         self.hosts['slave'] = []
